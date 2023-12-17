@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+# cssフォルダを除外
+User-agent: *
+Disallow: /css/
