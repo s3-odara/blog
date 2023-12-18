@@ -4,6 +4,7 @@ Hash: SHA512
 # Canonical URI
 Canonical: https://www.s3-odara.net/.well-known/security.txt
 Canonical: https://blog.omae.dev/.well-known/security.txt
+Canonical: https://omae.dev/.well-known/security.txt
 
 # My e-mail address
 Contact: mailto:haruta@s3-odara.net
@@ -18,8 +19,8 @@ Preferred-Languages: ja, en
 Expires: 2025-1-13T00:00:00.000Z
 -----BEGIN PGP SIGNATURE-----
 
-iHUEARYKAB0WIQStqTHSNaHpZKfm3o3xouKTzjuGFwUCZX+wbgAKCRDxouKTzjuG
-F3DIAP950bOW+9JnekptZowCv7EoorNPxIGlIy/r+UqZh5/GKAD/XcxvibVcSQQt
-XAY/T349aWeaGPzDhY0zSg5dM52Aagk=
-=BiAA
+iHUEARYKAB0WIQStqTHSNaHpZKfm3o3xouKTzjuGFwUCZX+8qQAKCRDxouKTzjuG
+FzP+APsEe+HVGejOJc27JVcXofGxh1ehPlHK+K1sGAI426NMiwEAtfSHuWOm+/Xl
+4rxE9AoATCIT7GfBiviCrCAKeTr8PAw=
+=GQy+
 -----END PGP SIGNATURE-----
