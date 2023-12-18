@@ -10,7 +10,7 @@ Canonical: https://omae.dev/.well-known/security.txt
 Contact: mailto:haruta@s3-odara.net
 
 # My Open PGP key
-Encryption: https://www.s3-odara.net/pgp-key.txt
+Encryption: https://www.s3-odara.net/files/pgp-key.txt
 Encryption: openpgp4fpr:B3531E573A6676E8A92060B3879D4D00108D4015
 
 # Languages I understand
@@ -19,8 +19,8 @@ Preferred-Languages: ja, en
 Expires: 2025-1-13T00:00:00.000Z
 -----BEGIN PGP SIGNATURE-----
 
-iHUEARYKAB0WIQStqTHSNaHpZKfm3o3xouKTzjuGFwUCZX+8qQAKCRDxouKTzjuG
-FzP+APsEe+HVGejOJc27JVcXofGxh1ehPlHK+K1sGAI426NMiwEAtfSHuWOm+/Xl
-4rxE9AoATCIT7GfBiviCrCAKeTr8PAw=
-=GQy+
+iHUEARYKAB0WIQStqTHSNaHpZKfm3o3xouKTzjuGFwUCZX/BkQAKCRDxouKTzjuG
+F38aAP9KSQ6wqQtmWjEWViSS89fHYRwUSQjaf6nqzR4tkmxGFAD/V4ITAuf2Fagv
+JKLH6z5OZVaXNp831ojFR1rl7Q/s+Q0=
+=7WYD
 -----END PGP SIGNATURE-----

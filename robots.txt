@@ -4,3 +4,7 @@ Allow: /
 # cssフォルダを除外
 User-agent: *
 Disallow: /css/
+
+# filesフォルダを除外 (検索に無意味)
+User-agent: *
+Disallow: /files/
