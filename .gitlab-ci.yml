@@ -9,9 +9,9 @@ deploy:
    - unzip awscliv2.zip
    - ./aws/install
    - export PATH="$PATH:/usr/local/bin"
-   - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-   - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-   - aws configure set region $AWS_DEFAULT_REGION
+   - /usr/local/bin/aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+   - /usr/local/bin/aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+   - /usr/local/bin/aws configure set region $AWS_DEFAULT_REGION
   script:
-   - aws s3 sync . s3://wwws3-odaranet  --endpoint-url https://6ecd930c8cd4dc63f87c9398762626e8.r2.cloudflarestorage.com
+   - /usr/local/bin/aws s3 sync . s3://wwws3-odaranet  --endpoint-url https://6ecd930c8cd4dc63f87c9398762626e8.r2.cloudflarestorage.com
   environment: production
