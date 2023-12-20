@@ -1,13 +1,9 @@
 deploy:
   stage: deploy
-  image: docker:latest
+  image: archlinux:latest
   before_script:
    - apk update
-   - apk add curl
-   - apk add unzip
-   - apk add gcompat
-   - apk add groff
-   - apk add less
+   - pacman -Syu curl unzip groff less
    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
    - unzip awscliv2.zip
    - ./aws/install
