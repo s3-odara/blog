@@ -1,5 +1,0 @@
-# exclude origin domain from search index
-https://blog-7nk.pages.dev/*
-  X-Robots-Tag: noindex
-
-

@@ -1,10 +1,14 @@
 User-agent: *
 Allow: /
 
-# cssフォルダを除外
-User-agent: *
-Disallow: /css/
-
 # filesフォルダを除外 (検索に無意味)
 User-agent: *
 Disallow: /files/
+
+# 設定ファイルとか
+User-agent: *
+Disallow: /CNAME
+Disallow: /LICENSE
+Disallow: /README.md
+Disallow: /_config.yml
+Disallow: /.gitlab-ci.yml
