@@ -1,29 +1,7 @@
-stages:
-  - build
-  - deploy
-
-build:
-  stage: build
-  script:
-  # We simulate a build phase by manually creating files in a build folder
-  # An example would be using `yarn build` to build a react project that would create static files in a build or public folder
-    - mkdir -p build && touch build/build.html build/build.txt
-  artifacts:
-    when: on_success
-    paths:
-      - build/
-    expire_in: 20 mins
-
-
 deploy:
   stage: deploy
-  needs:
-    - build
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
-  rules:
-    - if: $CI_COMMIT_TAG                 # Run this job when a tag is created
   script:
     - echo "Running deploy"
     - /usr/local/bin/aws s3 sync . s3://wwws3-odaranet  --endpoint-url https://6ecd930c8cd4dc63f87c9398762626e8.r2.cloudflarestorage.com
     - echo "Deployment successful"
-
