@@ -2,9 +2,9 @@ deploy:
   stage: deploy
   image: docker:latest
   before_script:
-   - apt-get update
-   - apt-get install curl
-   - apt-get install unzip
+   - apk update
+   - apk add curl
+   - apk add unzip
    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
    - unzip awscliv2.zip
    - ./aws/install
