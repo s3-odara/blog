@@ -5,7 +5,7 @@ deploy:
    - apk update
    - apk add curl
    - apk add unzip
-   - apk add glic
+   - apk add gcompat
    - apk add groff
    - apk add less
    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
