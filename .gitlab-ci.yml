@@ -2,7 +2,6 @@ deploy:
   stage: deploy
   image: archlinux:latest
   before_script:
-   - apk update
    - pacman -Syu curl unzip groff less
    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
    - unzip awscliv2.zip
