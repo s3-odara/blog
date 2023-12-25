@@ -57,4 +57,5 @@ header > time {
 
 img {
   max-width: 100%;
+  height: auto;
 }
