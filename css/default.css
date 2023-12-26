@@ -16,10 +16,14 @@ article {
 }
 
 
-blockquote p {
-  padding: 1em;
+blockquote div {
+  padding: 0.01em 1em 0.01em;
   background: #b7dcd5;
   border-radius: 0.6em;
+}
+
+blockquote footer {
+  padding: 1em 0em 0em;
 }
 
 blockquote p::before {
@@ -44,7 +48,7 @@ pre code {
   border-width: thin;
   padding: 0em 1em 1em;
   display: block;
-  white-space: pre-wrap;
+  overflow-x: auto;
 }
 
 header > h1 {
@@ -58,4 +62,17 @@ header > time {
 img {
   max-width: 100%;
   height: auto;
+}
+
+a {
+  color:#036;
+}
+
+a:focus,
+a:hover {
+  color:#005a6a;
+}
+
+a:visited {
+  color:#606;
 }

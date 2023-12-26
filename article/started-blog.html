@@ -113,14 +113,22 @@ Cloudflareはbrotli圧縮をサポートしているが、特定の状況でオ�
 </P>
 
 <blockquote>
+<div>
+<h2>
+エンドツーエンド圧縮に関する注意
+</h2>
 <p>
-エンドツーエンド (オリジンサーバーとCloudflare間、およびCloudflareグローバルネットワークとWebサイト訪問者間) で同じ圧縮アルゴリズムを使用している場合でも、次のオプションのいずれかを有効にしている場合、Cloudflareは応答を展開して再度圧縮する必要が有ります。<br>
-・メールアドレスの難読化<br>
-・ロケットローダー<br>
-・サーバー側の除外<br>
-・Mirage<br>
-・HTMLの最小化 (JavascriptとCSSは可能)<br>
-・常にHTTPSを使用
+エンドツーエンド (オリジンサーバーとCloudflare間、およびCloudflareグローバルネットワークとWebサイト訪問者間) で同じ圧縮アルゴリズムを使用している場合でも、次のオプションのいずれかを有効にしている場合、Cloudflareは応答を展開して再度圧縮する必要が有ります。
+</p>
+<ul>
+<li>メールアドレスの難読化</li>
+<li>ロケットローダー</li>
+<li>サーバー側の除外</li>
+<li>Mirage</li>
+<li>HTMLの最小化 (JavascriptとCSSは可能)</li>
+<li>常にHTTPSを使用</li>
+</ul>
+</div>
 <footer>
 —Cloudflare, <cite><a href="https://developers.cloudflare.com/speed/optimization/content/brotli/enable/#notes-about-end-to-end-compression">Cloudflare Docs</a></cite>
 </footer>
