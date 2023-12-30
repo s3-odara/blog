@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>
+Nostrと著作権 | s3-odaraのブログ
+</title>
+<meta name="description" content="">
+<meta name="viewport" content="initial-scale=1">
+<link rel="canonical" href="https://www.s3-odara.net/article/nostr-copyright.html">
+<link rel="stylesheet" type="text/css" href="../css/default.css">
+</head>
+
+<body>
+
+<header>
+<nav>
+<a href="../index.html">home</a>
+
+<p>
+mirror: <a rel="alternate" href="https://blog.omae.dev/">https://blog.omae.dev/</a><br>
+about: <a rel="auther" href="../about.html">https://s3-odara.net/about</a>
+</p>
+</nav>
+</header>
+
+
+<article>
+<header>
+<h1 id="Nostrと著作権">
+Nostrと著作権
+</h1>
+<time datetime="2023-12-30">
+2023-12-30
+</time>
+</header>
+
+<p>
+Nostrはその特性上送信したメッセージが複数のリレーに送信される。
+</p>
+
+<p>
+例えばAliceがws://alpha.example.com/というリレーに”I’m alice”という文章を投稿したとする。このとき第三者のCarolがws://bravo.example.com/というリレーに投稿をブロードキャストした場合を考えてみる。
+</p>
+
+<p>
+プロトコル上はCarolの行動は完全に正しいし、それを積極的に行えるクライアントもある。ただ、投稿された文書に著作権が認められるとどうなるだろうか。
+</p>
+
+<p>
+日本の著作権法ではリンクを参照することは侵害に当たらないが、著作物をコピーして別のサーバーに保存することは著作権侵害に当たるだろう。最も、数百字程度の短文に著作権が認められるかどうかはわからない。本当の問題は<a href="https://github.com/nostr-jp/nips-ja/blob/main/23.md">NIP-23</a>のような長文投稿を行うクライアントだ。
+</p>
+
+<p>
+明らかに著作権で保護される文書を無断で別のサーバーにコピーして公開することはそれがプロトコルの根幹だとしても許されるだろうか。
+</p>
+
+<p>
+<a href="https://github.com/nostr-protocol/nips/pull/857">NIPsのGitHubで投稿にライセンスを追加する提案</a>が話し合われているが、fiatjafはあまり乗り気ではなさそうだ。曰く
+<q cite="https://github.com/nostr-protocol/nips/pull/857#issuecomment-1802098695">無意味な法律に対処する最善の方法は、それを無視することだ</q>
+- <cite><a href="https://github.com/nostr-protocol/nips/pull/857#issuecomment-1802098695">nostr-protocol/nips</a></cite>
+ 
+</article>
+
+<footer>
+<a href="../index.html">s3-odaraのサイト</a> (C) 2023 by <a rel="auther" href="../about.html">小原晴太</a> is Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a><br>
+<div class="center"> <a href="../index.html">home</a> </div>
+</footer>
+</body>
+</html>
