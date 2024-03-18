@@ -254,6 +254,22 @@ SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh"
 ssh認証に使いたいpgp鍵がkeycard上にない場合はその副鍵のkeygripを<code>$GNUPGHOME/sshcontrol</code>に追加する必要があるが、鍵がcard上にある場合は黙示的にssh鍵として扱われるので<code>sshcontrol</code>ファイルを編集する必要もない。<a href="https://wiki.archlinux.jp/index.php/GnuPG#SSH_%E8%AA%8D%E8%A8%BC%E3%81%AB_PGP_%E9%8D%B5%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%99%E3%82%8B">念の為追加しても良い</a>。
 </p>
 
+<h2 id="Thunderbirdで使う">
+Thunderbirdで使う
+</h2>
+
+<p>
+ThunderbirdにOpenPGPサポートが組み込まれたためにEgnimailはサポートされなくなったが、Thunderbirdの使用するRNPライブラリはハードウェアキーをサポートしないためデフォルトではThunderbirdはYubikey上のPGP鍵を使用できない。秘密鍵はGnuPGの鍵束を参照するように手動で構成する必要がある。
+</p>
+
+<p>
+設定/一般の下部にある設定エディタを開いて<code>mail.openpgp.allow_external_gnupg</code>をtrueにする。その後アカウント設定/エンドツーエンド暗号化からキーの追加をクリック、外部のGnuPG鍵を使用するを選択してGPGの鍵IDを入力する。これで秘密鍵を用いた操作はGnuPGの鍵束が参照されるようになる。
+</p>
+
+<p>
+外部GnuPG鍵を参照するよう構成してもThunderbirdは依然公開鍵についてThunderbird組み込みの鍵束を参照するので自分の公開鍵をOpenPGP鍵マネージャーから追加しておく必要がある。
+</p>
+
 <h2>
 参考文献
 </h2>
@@ -267,6 +283,7 @@ ssh認証に使いたいpgp鍵がkeycard上にない場合はその副鍵のkeyg
 <li><a href="https://developers.yubico.com/PGP/">https://developers.yubico.com/PGP/</a></li>
 <li><a href="https://man.archlinux.org/man/gpg-agent.1.en">gpg-agent(1) — Arch manual pages</a></li>
 <li><a href="https://wiki.archlinux.org/title/GnuPG">GnuPG - ArchWiki</a></li>
+<li><a href="https://wiki.mozilla.org/Thunderbird:OpenPGP:Smartcards">Thunderbird:OpenPGP:Smartcards - MozillaWiki</a></li>
 
 </ul>
 
