@@ -131,7 +131,7 @@ yubikeyのopenpgp cardには3種類の鍵がある。PINは最大127文字でア
 </h2>
 
 <p>
-公開鍵のファイルを置いた場所を指定しておくと別の端末を使う際、<code>gpg --edit-card</code>の後<code>fetch</code>をすると公開鍵を鍵束にインポートできて便利。
+公開鍵のファイルを置いた場所を指定しておけば別の端末を使う際、<code>gpg --edit-card</code>の後<code>fetch</code>をすると公開鍵を鍵束にインポートできて便利。
 </p>
 
 <pre>
@@ -189,7 +189,7 @@ $ ykman openpgp keys set-touch att On
 </h2>
 
 <p>
-鍵をYubikeyに移動すると自動的に秘密鍵が削除されるのでバックアップをしておく。副鍵のみを移動するためには、下準備として<code>gpg --export-secret-keys -a {ID}</code>で主鍵を含む鍵のバックアップをして、<code>gpg --export-secret-subkeys -a {ID}</code>で副鍵のみのバックアップも出力したあと<code>~/.gnupg/private-keys-v1.d</code>と<code>~/.gnupg/openpgp-revocs.d</code>以下にある秘密鍵と失効証明書を削除して副鍵のみのバックアップをインポートしておく必要がある。
+鍵をYubikeyに移動すると自動的に秘密鍵が削除されるのでバックアップをしておく。副鍵のみを移動するためには、下準備として<code>gpg --export-secret-keys -a {ID}</code>で主鍵を含む鍵のバックアップをして、<code>gpg --export-secret-subkeys -a {ID}</code>で副鍵のみのバックアップも出力したあと<code>~/.gnupg/private-keys-v1.d</code>と<code>~/.gnupg/openpgp-revocs.d</code>以下にある秘密鍵と失効証明書を削除して副鍵のみのバックアップをインポートしておく必要がある。主鍵を暗号化してバックアップする場合はgpgのパスフレーズに頼らず別の暗号化ソフトウェアでmetadataごと暗号化するほうがいい。<a href="https://xkcd.com/538/">暗号化したところでパスワードを尋問されれば終わり</a>だが、もっとも紙やUSBメモリにバックアップしたところでそれは同じである。この種の攻撃から身を守るためには情報と自分を24時間武装した人間に警備させる必要があるが、大した秘密を持っているわけではないので俺には暗号化で十分だと思う。
 </p>
 
 <pre>
@@ -253,6 +253,22 @@ SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh"
 <p>
 ssh認証に使いたいpgp鍵がkeycard上にない場合はその副鍵のkeygripを<code>$GNUPGHOME/sshcontrol</code>に追加する必要があるが、鍵がcard上にある場合は黙示的にssh鍵として扱われるので<code>sshcontrol</code>ファイルを編集する必要もない。<a href="https://wiki.archlinux.jp/index.php/GnuPG#SSH_%E8%AA%8D%E8%A8%BC%E3%81%AB_PGP_%E9%8D%B5%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%99%E3%82%8B">念の為追加しても良い</a>。
 </p>
+
+<h2>
+参考文献
+</h2>
+
+<ul>
+
+<li><a href="https://qiita.com/shun-shobon/items/96f08aa09a30c26a55b5">PGP鍵をYubiKeyで管理する手引き #yubikey - Qiita</a></li>
+<li><a href="https://blog.3qe.us/entry/2022/10/03/012420">PGP鍵を交換しました + 令和最新版のPGP鍵運用メモ - Lambdaカクテル</a></li>
+<li><a href="https://blog.jj1lfc.dev/posts/pgp-key-transition/">PGP 主鍵を交換した話 | おるとのページ</a></li>
+<li><a href="https://zenn.dev/m1sk9/articles/use-gpg-as-ssh-key">GPG鍵をSSH鍵として使う</a></li>
+<li><a href="https://developers.yubico.com/PGP/">https://developers.yubico.com/PGP/</a></li>
+<li><a href="https://man.archlinux.org/man/gpg-agent.1.en">gpg-agent(1) — Arch manual pages</a></li>
+<li><a href="https://wiki.archlinux.org/title/GnuPG">GnuPG - ArchWiki</a></li>
+
+</ul>
 
 </article>
 
