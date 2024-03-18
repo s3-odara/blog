@@ -9,6 +9,9 @@ PGP副鍵をYubikeyに入れた | s3-odaraのブログ
 <meta name="viewport" content="initial-scale=1">
 <link rel="canonical" href="https://www.s3-odara.net/article/">
 <link rel="stylesheet" type="text/css" href="../css/default.css">
+<link rel="stylesheet" type="text/css" href="../css/a11y-light.min.css">
+<script defer src="../js/bash_diff_shell.min.js"></script>
+<script>window.addEventListener('load', () => hljs.highlightAll());</script>
 </head>
 
 <body>
@@ -47,7 +50,7 @@ PGP副鍵をYubikeyに入れてみた。いろいろな人が方法を解説し�
 <a href="https://fuwa.dev/posts/yubikey/">Yubikeyには主鍵を入れろ</a>と言う話もあるが、この2024年にWeb of Trustに基づいた信頼の輪はあまり機能していない。誰でも鍵とそれに対する署名をアップロードできる従来型のkeyserverではGDPR対応や<a href="https://text.baldanders.info/remark/2019/07/openpgp-certificate-flooding/">大量の署名を付すスパム</a>などが問題になり<a href="https://web.archive.org/web/20220119094712/https://www.sks-keyservers.net/">sks-keyserver</a>や<a href="https://www.nic.ad.jp/ja/newsletter/No82/NL82_0220.pdf">pgp.nic.ad.jpなどもサービスを終了した</a>。keys.openpgp.orgやkeys.mailvelope.comのように鍵の同期やユーザーによる署名の付加をせずにある程度本人確認をした鍵のみをアップロードするサーバーが現れてシェアを獲得している。<a href="https://gnupg.org/faq/wkd.html">GnuPG</a>や<a href="https://support.mozilla.org/en-US/kb/thunderbird-help-cannot-encrypt#w_obtaining-openpgp-public-keys-of-correspondents">ThunderbirdはデフォルトでWeb key Directoryを用いて鍵を探す</a>。何が言いたいかというと、主鍵を使うことは副鍵の更新と失効以外にほぼないということだ。どうせ使わないなら使えない場所で眠っていてもらったほうがいい。
 </p>
 
-<h2>
+<h2 id="準備">
 準備
 </h2>
 
@@ -85,7 +88,7 @@ $ ykman openpgp -h
 </code>
 </pre>
 
-<h2>
+<h2 id="KDFを有効化する">
 KDFを有効化する
 </h2>
 
@@ -123,7 +126,7 @@ yubikeyのopenpgp cardには3種類の鍵がある。PINは最大127文字でア
 
 </dl>
 
-<h2>
+<h2 id="公開鍵の取得用URLを設定">
 公開鍵の取得用URLを設定
 </h2>
 
@@ -137,7 +140,7 @@ gpg/card&gt; url
 </code>
 </pre>
 
-<h2>
+<h2 id="PINの入力をキャッシュしないようにする">
 PINの入力をキャッシュしないようにする
 </h2>
 
@@ -150,7 +153,7 @@ gpg/card&gt; forcesig
 </code>
 </pre>
 
-<h2>
+<h2 id="PIN入力の最大試行回数を増やす">
 PIN入力の最大試行回数を増やす
 </h2>
 
@@ -207,7 +210,7 @@ gpg&gt; key2
 この後にsaveをすると自動的に鍵が削除される。quitして保存せずに終了した場合は鍵がPC上に残る。複数のYubikeyに複製する場合は一旦秘密鍵を削除して副鍵のみのバックアップからインポートする必要がある。
 </p>
 
-<h2>
+<h2 id="sshで使う">
 sshで使う
 </h2>
 
@@ -235,7 +238,7 @@ yubikeyをsshに使う方法は現在3種類あり、これらには長短があ
 <p>
 
 <pre>
-<code>
+<code class="no-highlight">
 ~/.config/environment.d/gpg_agent.conf
 
 SSH_AGENT_PID=""
