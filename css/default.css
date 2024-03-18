@@ -71,8 +71,8 @@ header > time {
 }
 
 @media screen and (max-width: 40em) {
-article li {
-  margin: 1em 0;
+article li:has(> a) {
+  margin: 0.5em 0;
 }
 }
 
