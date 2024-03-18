@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>
+PGP副鍵をYubikeyに入れた | s3-odaraのブログ
+</title>
+<meta name="description" content="">
+<meta name="viewport" content="initial-scale=1">
+<link rel="canonical" href="https://www.s3-odara.net/article/">
+<link rel="stylesheet" type="text/css" href="../css/default.css">
+</head>
+
+<body>
+
+<header>
+<nav>
+<a href="../index.html">home</a>
+
+<p>
+mirror: <a rel="alternate" href="https://blog.omae.dev/">https://blog.omae.dev/</a><br>
+about: <a rel="auther" href="../about.html">https://s3-odara.net/about</a>
+</p>
+</nav>
+</header>
+
+
+<article>
+<header>
+<h1>
+PGP副鍵をYubikeyに入れた
+</h1>
+<time datetime="2024-03-18">
+2024-03-18
+</time>
+</header>
+
+<p>
+PGP副鍵をYubikeyに入れてみた。いろいろな人が方法を解説しているが例に漏れず俺も<a href="https://developers.yubico.com/PGP/">公式ドキュメント</a>の劣化翻訳の再配布をしようと思う。やるときはその時の最新のドキュメントを全部読んでからにしよう。
+</p>
+
+<p>
+今まで完全にソフトウェアでPGP鍵を管理していたのだが、秘密鍵をOSに露出せずに署名などの操作ができるデバイスはやはり魅力的だ。ちょうどCloudflareのセールで2つ買ったYubikeyがあったので欲求に負けて副鍵を入れることにした。<a href="https://support.yubico.com/hc/en-us/articles/360013708760-YubiKey-Firmware-Is-Not-Upgradeable">Yubikeyはファームウェアがアップデートできず</a>、<a href="https://www.yubico.com/blog/secure-hardware-vs-open-source/">そのソースは開示されておらず</a>、<a href="https://www.yubico.com/support/security-advisories/ysa-2019-02/#technical-details">乱数生成などに脆弱性があれば</a>、<a href="https://datatracker.ietf.org/doc/html/rfc6979">署名を偽造できる可能性がある</a>がまあYubicoがリコールを恐れて脆弱性を隠すことなんてしないと信じることにする。
+</p>
+
+<p>
+<a href="https://fuwa.dev/posts/yubikey/">Yubikeyには主鍵を入れろ</a>と言う話もあるが、この2024年にWeb of Trustに基づいた信頼の輪はあまり機能していない。誰でも鍵とそれに対する署名をアップロードできる従来型のkeyserverではGDPR対応や<a href="https://text.baldanders.info/remark/2019/07/openpgp-certificate-flooding/">大量の署名を付すスパム</a>などが問題になり<a href="https://web.archive.org/web/20220119094712/https://www.sks-keyservers.net/">sks-keyserver</a>や<a href="https://www.nic.ad.jp/ja/newsletter/No82/NL82_0220.pdf">pgp.nic.ad.jpなどもサービスを終了した</a>。keys.openpgp.orgやkeys.mailvelope.comのように鍵の同期やユーザーによる署名の付加をせずにある程度本人確認をした鍵のみをアップロードするサーバーが現れてシェアを獲得している。<a href="https://gnupg.org/faq/wkd.html">GnuPG</a>や<a href="https://support.mozilla.org/en-US/kb/thunderbird-help-cannot-encrypt#w_obtaining-openpgp-public-keys-of-correspondents">ThunderbirdはデフォルトでWeb key Directoryを用いて鍵を探す</a>。何が言いたいかというと、主鍵を使うことは副鍵の更新と失効以外にほぼないということだ。どうせ使わないなら使えない場所で眠っていてもらったほうがいい。
+</p>
+
+<h2>
+準備
+</h2>
+
+<p>
+操作はGnuPGとykmanを用いて行う。GnuPGは低レベルな方法でYubikeyを操作するのに対してykmanはpcscdを叩くので両者が競合する。<a href="https://blog.3qe.us/entry/2022/10/09/082043#gpg-agent%E3%81%8C%E5%8B%95%E3%81%8B%E3%81%AA%E3%81%84%E3%81%AE%E3%82%92%E7%9B%B4%E3%81%99">解決する方法</a>も<a href="https://wiki.archlinux.jp/index.php/GnuPG#GnuPG_%E3%81%A8_pcscd_(PCSC_Lite)">ある</a>が、まあ大概の問題は<code>gpg-connect-agent reloadagent /bye</code>と<code>sudo systemctl restart pcscd</code> (systemdの場合) をしてyubikeyを抜き差しすれば解決するので問題ではないかもしれない。
+</p>
+
+<p>
+<code>gpg --edit-card</code>で鍵の編集ができる。
+</p>
+
+<pre>
+<code class="language-console">
+$ gpg --edit-card
+
+使えるコマンドを増やす
+gpg/card&gt; admin
+
+コマンドのリストを見る
+gpg/card&gt; help
+</code>
+</pre>
+
+<p>
+<code>ykman openpgp *</code>でopenpgp cardの設定変更ができる。
+</p>
+
+<pre>
+<code class="language-console">
+ヘルプを表示
+$ ykman -h
+
+openpgpコマンド以下のヘルプを表示
+$ ykman openpgp -h
+</code>
+</pre>
+
+<h2>
+KDFを有効化する
+</h2>
+
+<p>
+<a href="https://developers.yubico.com/PGP/YubiKey_5.2.3_Enhancements_to_OpenPGP_3.4.html#_key_derived_format">ファームウェア5.2.3以降のYubikeyにはkdf機能がある</a>のでそれを有効化する。PINをyubikeyに送信する前にハッシュ化するらしい。意味があるとしたらgpg-agentがキャッシュしているPINを取得されても少しは時間稼ぎができることだろうか？まあ現実的に意味があるかは別として互換性以外に物事が悪化することはなさそうなので気分的に有効にしたほうがいい。鍵を書き込むとOpenPGP Cardをリセットするまで変更できなくなる。
+</p>
+
+<pre>
+<code class="language-console">
+$ gpg --edit-card
+gpg/card&gt; admin
+
+kdfを有効化。管理者PINを要求されるので初期の12345678を入力。
+gpg/card&gt; kdf-setup
+
+パスワードを変更
+gpg/card&gt; passwd
+</code>
+</pre>
+
+<p>
+yubikeyのopenpgp cardには3種類の鍵がある。PINは最大127文字でアルファベットも使用できる。User PINは6桁ぐらいのアルファベット小文字のみなどにすると数字だけよりエントロピーを増せてキーボードで打ちやすいのでおすすめ。
+</p>
+
+<dl>
+
+<dt>PIN (User PIN)</dt>
+<dd>設定に応じて署名、暗号化、認証時に要求される。初期値は123456</dd>
+
+<dt>Admin PIN</dt>
+<dd>OpenPGP cardの管理やUser PINのリセットに使われる。忘れた場合はOpenPGP Cardのリセットが必要。初期値は12345678</dd>
+
+<dt>Reset Code</dt>
+<dd>User PINのリセットに使われる。初期値は未設定。</dd>
+
+</dl>
+
+<h2>
+公開鍵の取得用URLを設定
+</h2>
+
+<p>
+公開鍵のファイルを置いた場所を指定しておくと別の端末を使う際、<code>gpg --edit-card</code>の後<code>fetch</code>をすると公開鍵を鍵束にインポートできて便利。
+</p>
+
+<pre>
+<code class="language-console">
+gpg/card&gt; url
+</code>
+</pre>
+
+<h2>
+PINの入力をキャッシュしないようにする
+</h2>
+
+<p>
+yubikeyはデフォルトでPIN入力をキャッシュするため、一度PINを入力すると抜き差ししたり再起動するまではPIN入力の必要がなくなる。ただこの仕事は基本的にgpg-agentの領分であり、<a href="https://man.archlinux.org/man/gpg-agent.1.en#default">gpg-agentのcache ttlの設定</a>を尊重するためにもYubikey側ではキャッシュせず毎回要求するようにする。
+</p>
+<pre>
+<code class="language-console">
+gpg/card&gt; forcesig
+</code>
+</pre>
+
+<h2>
+PIN入力の最大試行回数を増やす
+</h2>
+
+<p>
+デフォルトでは3回の試行でロックされるが、少し厳しいので変更する。gpgは一旦<code>quit</code>で抜けてykmanを使用する。数字は左からPIN, Reset Code, Admin PINの順。
+</p>
+
+<pre>
+<code class="language-console">
+$ ykman openpgp access set-retries 10 99 99
+</code>
+</pre>
+
+<h2 id="鍵を用いた操作にタッチを要求する">
+鍵を用いた操作にタッチを要求する
+</h2>
+
+<p>
+Yubikeyにはタッチセンサがついていて、署名や認証などの際にYubikeyへのタッチを要求することができる。OSの制御を奪われていても物理的にYubikeyにタッチして承認した人間がいることの証明になる。鍵の種類はsig, dec, aut, attでそれぞれ署名、復号、認証、鍵への署名 (おそらく鍵の[C]機能) に対応している。オプションはOn, off, Fixed, Cached, Cached-Fixedから選択でき、Fixedのついたオプションを選ぶとOpenPGP Cardをリセットしない限り変更できなくなる。Cachedのついたオプションはタッチのあと15秒間要求されない。dec鍵をOn (都度要求) にするとThunderbirdなどで暗号化されたメールを読むときに1通ずつタッチする必要が生じるのでCachedがおすすめ。
+</p>
+
+<pre>
+<code class="language-console">
+$ ykman openpgp keys set-touch sig On
+$ ykman openpgp keys set-touch dec Cached
+$ ykman openpgp keys set-touch aut On
+$ ykman openpgp keys set-touch att On
+</code>
+</pre>
+
+<h2 id="鍵を移動する">
+鍵を移動する
+</h2>
+
+<p>
+鍵をYubikeyに移動すると自動的に秘密鍵が削除されるのでバックアップをしておく。副鍵のみを移動するためには、下準備として<code>gpg --export-secret-keys -a {ID}</code>で主鍵を含む鍵のバックアップをして、<code>gpg --export-secret-subkeys -a {ID}</code>で副鍵のみのバックアップも出力したあと<code>~/.gnupg/private-keys-v1.d</code>と<code>~/.gnupg/openpgp-revocs.d</code>以下にある秘密鍵と失効証明書を削除して副鍵のみのバックアップをインポートしておく必要がある。
+</p>
+
+<pre>
+<code class="language-console">
+$ gpg --edit-key {ID}
+鍵束で一番上に表示されている副鍵を選択
+gpg&gt; key1
+鍵を移動する。移動中にどのスロットを選択するか聞かれるので署名鍵なら署名用を選ぶ。
+gpg&gt; keytocard
+key1の選択を解除する
+gpg&gt; key1
+同様に繰り返す
+gpg&gt; key2
+</code>
+</pre>
+
+<p>
+この後にsaveをすると自動的に鍵が削除される。quitして保存せずに終了した場合は鍵がPC上に残る。複数のYubikeyに複製する場合は一旦秘密鍵を削除して副鍵のみのバックアップからインポートする必要がある。
+</p>
+
+<h2>
+sshで使う
+</h2>
+
+<p>
+yubikeyをsshに使う方法は現在3種類あり、これらには長短がある。<a href="https://developers.yubico.com/PIV/Guides/Securing_SSH_with_OpenPGP_or_PIV.html">公式でもsshに使う方法を比較</a>している
+</p>
+
+<dl>
+
+<dt>PIVカードの認証用スロットを使う</dt>
+<dd>連邦職員でもない限りメリットはないので無視</dd>
+
+<dt>OpenPGP Cardを使う</dt>
+<dd>セットアップが簡単だがサーバー側にOpenSSH 8.2以上が必要で、既存の公開鍵認証に他要素認証要素を足すものなので別のPCに展開する際は秘密鍵を置く必要がある。さらに複数のYubikey、環境へ複製することはできない。</dd>
+
+<dt>OpenSSHのFIDO2サポートを使う</dt>
+<dd>クライアント側でssh-agentにgpg-agentを使うよう設定する必要があるが鍵管理は楽。</dd>
+
+</dl>
+
+<p>
+
+<p>
+少なくともYubikeyの中では全く別の機能として保管されるので3つとも競合はしないはずだから複数用意してもいい。ここでは2番目の方法を行う。まず、OpenPGP Cardをsshで使えるようにするためにgpg-agentをssh-agentとして使用するための環境変数を設定する。
+<p>
+
+<pre>
+<code>
+~/.config/environment.d/gpg_agent.conf
+
+SSH_AGENT_PID=""
+SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh"
+</code>
+</pre>
+
+<p>
+おそらくこれだけでsshに使えるようになる。<a href="https://wiki.archlinux.org/title/Zsh#Startup/Shutdown_files">シェルを起動したときにおしゃれに変数を設定する方法</a>とかもあったりするがグローバルに設定してしまえばいい。古い解説だと<code>enable-ssh-support</code>などの設定が必要だと書かれていたりするがGnuPG 2.4.5では環境変数以外は特段設定なくとも使用可能。
+</p>
+
+<p>
+ssh認証に使いたいpgp鍵がkeycard上にない場合はその副鍵のkeygripを<code>$GNUPGHOME/sshcontrol</code>に追加する必要があるが、鍵がcard上にある場合は黙示的にssh鍵として扱われるので<code>sshcontrol</code>ファイルを編集する必要もない。<a href="https://wiki.archlinux.jp/index.php/GnuPG#SSH_%E8%AA%8D%E8%A8%BC%E3%81%AB_PGP_%E9%8D%B5%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%99%E3%82%8B">念の為追加しても良い</a>。
+<p>
