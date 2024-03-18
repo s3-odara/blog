@@ -22,16 +22,17 @@ article {
   text-align: center;
 }
 
+blockquote p {
+  margin: 0;
+}
 
 blockquote div {
-  padding: 0.01em 1em 0.01em;
+  padding: 0;
+  padding: 1em;
   background: #b7dcd5;
   border-radius: 0.6em;
 }
 
-blockquote footer {
-  padding: 0.5em 0em 0em;
-}
 
 blockquote p::before {
   content: '\201C';
