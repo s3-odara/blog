@@ -9,9 +9,8 @@
 <meta name="viewport" content="initial-scale=1">
 <link rel="canonical" href="https://www.s3-odara.net/article/started-blog.html">
 <link rel="stylesheet" type="text/css" href="../css/default.css">
-<link rel="stylesheet" type="text/css" href="../css/a11y-light.min.css">
-<script defer src="../js/json_yaml_xml.min.js"></script>
-<script>window.addEventListener('load', () => hljs.highlightAll());</script>
+<link rel="stylesheet" type="text/css" href="../css/prism.css">
+<script defer src="../js/markup_xml_json_json5_toml_yaml.js"></script>
 </head>
 
 <body>
@@ -70,8 +69,7 @@ about: <a rel="auther" href="../about.html">https://s3-odara.net/about</a>
 </p>
 
 <pre>
-<code class="language-yml">
-deploy:
+<code class="language-yml">deploy:
   stage: deploy
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
   script:
@@ -80,8 +78,7 @@ deploy:
     - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
     - aws configure set region $AWS_DEFAULT_REGION
     - aws s3 sync . s3://wwws3-odaranet  --endpoint-url https://`CF-API`.r2.cloudflarestorage.com --exclude ".git*" --delete
-    - echo "Deployment successful"
-</code>
+    - echo "Deployment successful"</code>
 </pre>
 
 <h2 id="Cloudfalareの設定">
@@ -156,8 +153,7 @@ robots.txtの設定
 </p>
 
 <pre>
-<code>
-User-agent: *
+<code>User-agent: *
 Allow: /
 
 # filesフォルダを除外 (検索に無意味)
@@ -170,8 +166,7 @@ Disallow: /CNAME
 Disallow: /LICENSE
 Disallow: /README.md
 Disallow: /_config.yml
-Disallow: /.gitlab-ci.yml
-</code>
+Disallow: /.gitlab-ci.yml</code>
 </pre>
 
 <h2 id="シンタックスハイライト">
