@@ -70,9 +70,12 @@ header > time {
   font-size: medium;
 }
 
+@media screen and (max-width: 40em) {
 article li {
-  margin: 0.1em 0;
+  margin: 1em 0;
 }
+}
+
 
 img {
   max-width: 100%;
