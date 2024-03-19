@@ -76,6 +76,9 @@ article li:has(> a) {
 }
 }
 
+article > dl > dd:has(+ dt) {
+  margin-bottom: 0.5em;
+}
 
 img {
   max-width: 100%;
