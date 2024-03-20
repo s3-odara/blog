@@ -102,7 +102,7 @@ img {
 @media screen and (prefers-color-scheme: dark) {
 body {
   background-color: #223331;
-  color: #fff;
+  color: #ddd;
 }
 a {
   color:#8fcdff;
