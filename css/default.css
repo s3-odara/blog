@@ -4,11 +4,10 @@ body {
   overflow-wrap: break-word;
 }
 
-
 @media screen and (min-width: 40em) {
-body {
-  width: 97%;
-  margin: 1em auto 0.5em;
+article {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
 }
 }
 
@@ -43,6 +42,21 @@ blockquote p::before {
 
 blockquote p::after {
   content: '\201D';
+}
+
+a {
+  color:#036;
+}
+
+@media screen {
+a:focus,
+a:hover {
+  color:#005a6a;
+}
+
+a:visited {
+  color:#606;
+}
 }
 
 code {
@@ -85,16 +99,30 @@ img {
   height: auto;
 }
 
-a {
-  color:#036;
+@media screen and (prefers-color-scheme: dark) {
+body {
+  background-color: #223331;
+  color: #fff;
 }
-
+a {
+  color:#8fcdff;
+}
 a:focus,
 a:hover {
-  color:#005a6a;
+  color: #82ecff;
 }
 
 a:visited {
-  color:#606;
+  color: #e8a9e8;
 }
-
+blockquote div {
+  background: #264e48;
+}
+code {
+  background-color: #264e48;
+}
+pre code {
+  margin: 0;
+  background-color: #202224;
+}
+}

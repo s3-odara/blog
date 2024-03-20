@@ -66,3 +66,41 @@ https://prismjs.com/download.html#themes=prism-solarizedlight&languages=markup+c
 	cursor: help;
 }
 
+@media screen and (prefers-color-scheme: dark) {
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted
+.token.namespace {
+	color: #66b0ff;
+}
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.url,
+.token.inserted {
+	color: #d291ff;
+}
+.token.entity {
+	color: #acacac;
+}
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+	color: #65c15d;
+}
+.token.function,
+.token.class-name {
+	color: #d7a568;
+}
+.token.regex,
+.token.important,
+.token.variable {
+	color: #f4918e;
+}
+}
