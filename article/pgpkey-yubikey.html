@@ -54,7 +54,7 @@ PGP副鍵をYubikeyに入れてみた。いろいろな人が方法を解説し�
 </h2>
 
 <p>
-まずOpenPGP鍵を用意する。YubikeyはRSA鍵と、楕円曲線暗号の曲線としてNIST P曲線、brainpool曲線、cv25519をサポートしている。どの鍵もcv25519を使って作ることを推奨する。楕円曲線暗号はRSAよりも効率性が高い。その中でもツイストエドワード曲線を用いて最適化されたed25519、x25519の処理が最も効率が高い。さらにed25519は鍵の作成時にしか乱数を使用しないため<a href="https://www.yubico.com/support/security-advisories/ysa-2019-02/#technical-details">後からYubikeyの乱数生成器に脆弱性が見つかって</a>も秘密鍵を復元したりすることはできない。<a href="https://safecurves.cr.yp.to/rigid.html">NIST P曲線には説明不能なシード値をハッシュすることで得られた係数が含まれている</a>。現実的な攻撃として適用可能なものは報告されていないといえ過去に暗号規格にバックドアを含んでいたことがある組織の標準化した規格に含まれる説明不能な文字列に対して陰謀論を完全に退ける方法はない。
+まずOpenPGP鍵を用意する。YubikeyはRSA鍵と、楕円曲線暗号の曲線としてNIST P曲線、brainpool曲線、cv25519をサポートしている。どの鍵もcv25519を使って作ることを推奨する。楕円曲線暗号はRSAよりも効率性が高い。その中でもツイストエドワード曲線を用いて最適化されたed25519、x25519の処理が最も効率が高い。さらにed25519は鍵の作成時にしか乱数を使用しないため<a href="https://www.yubico.com/support/security-advisories/ysa-2019-02/#technical-details">後からYubikeyの乱数生成器に脆弱性が見つかって</a>も秘密鍵を復元したりすることはできない。<a href="https://safecurves.cr.yp.to/rigid.html">NIST P曲線には説明不能なシード値をハッシュすることで得られた係数が含まれている</a>。現実的な攻撃として適用可能なものは報告されていないといえ、過去に暗号規格にバックドアを含んでいたことがある組織の標準化した規格に含まれる説明不能な文字列に対して陰謀論を完全に退ける方法はない。
 </p>
 
 <blockquote cite="https://www.schneier.com/blog/archives/2013/09/the_nsa_is_brea.html/#comment-202922">
@@ -101,7 +101,7 @@ KDFを有効化する
 </h2>
 
 <p>
-<a href="https://developers.yubico.com/PGP/YubiKey_5.2.3_Enhancements_to_OpenPGP_3.4.html#_key_derived_format">ファームウェア5.2.3以降のYubikeyにはkdf機能がある</a>のでそれを有効化する。PINをyubikeyに送信する前にハッシュ化するらしい。意味があるとしたらgpg-agentがキャッシュしているPINを取得されても少しは時間稼ぎができることだろうか？まあ現実的に意味があるかは別として互換性以外に物事が悪化することはなさそうなので気分的に有効にしたほうがいい。鍵を書き込むとOpenPGP Cardをリセットするまで変更できなくなる。
+<a href="https://developers.yubico.com/PGP/YubiKey_5.2.3_Enhancements_to_OpenPGP_3.4.html#_key_derived_format">ファームウェア5.2.3以降のYubikeyにはkdf機能がある</a>のでそれを有効化する。PINをyubikeyに送信する前にハッシュ化するらしい。意味があるとしたらgpg-agentがキャッシュしているPINを取得されても少しは時間稼ぎができることだろうか？まあ現実的に意味があるかは別として、互換性以外に物事が悪化することはなさそうなので気分的に有効にしたほうがいい。鍵を書き込むとOpenPGP Cardをリセットするまで変更できなくなる。
 </p>
 
 <pre>
@@ -230,7 +230,7 @@ yubikeyをsshに使う方法は現在3種類あり、これらには長短があ
 <p>
 
 <p>
-少なくともYubikeyの中では全く別の機能として保管されるので3つとも競合はしないはずだから複数用意してもいい。ここでは2番目の方法を行う。まず、OpenPGP Cardをsshで使えるようにするためにgpg-agentをssh-agentとして使用するための環境変数を設定する。
+少なくともYubikeyの中では全く別の機能として保管されるので、3つとも競合はしないはずだから複数用意してもいい。ここでは2番目の方法を行う。まず、OpenPGP Cardをsshで使えるようにするためにgpg-agentをssh-agentとして使用するための環境変数を設定する。
 <p>
 
 <pre>
@@ -241,7 +241,7 @@ SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh"</code>
 </pre>
 
 <p>
-おそらくこれだけでsshに使えるようになる。<a href="https://wiki.archlinux.org/title/Zsh#Startup/Shutdown_files">シェルを起動したときにおしゃれに変数を設定する方法</a>とかもあったりするがグローバルに設定してしまえばいい。古い解説だと<code>enable-ssh-support</code>などの設定が必要だと書かれていたりするがGnuPG 2.4.5では環境変数以外は特段設定なくとも使用可能。
+おそらくこれだけでsshに使えるようになる。<a href="https://wiki.archlinux.org/title/Zsh#Startup/Shutdown_files">シェルを起動したときにおしゃれに変数を設定する方法</a>とかもあったりするがグローバルに設定してしまえばいい。古い解説だと<code>enable-ssh-support</code>などの設定が必要だと書かれていたりするが、GnuPG 2.4.5では環境変数以外は特段設定なくとも使用可能だ。
 </p>
 
 <p>
@@ -253,7 +253,7 @@ Thunderbirdで使う
 </h2>
 
 <p>
-ThunderbirdにOpenPGPサポートが組み込まれたためにEgnimailはサポートされなくなったが、Thunderbirdの使用するRNPライブラリはハードウェアキーをサポートしないためデフォルトではThunderbirdはYubikey上のPGP鍵を使用できない。秘密鍵はGnuPGの鍵束を参照するように手動で構成する必要がある。
+ThunderbirdにOpenPGPサポートが組み込まれたためにEgnimailはサポートされなくなったが、Thunderbirdの使用するRNPライブラリはハードウェアキーをサポートしないため、デフォルトではThunderbirdはYubikey上のPGP鍵を使用できない。秘密鍵はGnuPGの鍵束を参照するように手動で構成する必要がある。
 </p>
 
 <p>
@@ -261,7 +261,7 @@ ThunderbirdにOpenPGPサポートが組み込まれたためにEgnimailはサポ
 </p>
 
 <p>
-外部GnuPG鍵を参照するよう構成してもThunderbirdは依然公開鍵についてThunderbird組み込みの鍵束を参照するので自分の公開鍵をOpenPGP鍵マネージャーから追加しておく必要がある。
+外部GnuPG鍵を参照するよう構成しても、Thunderbirdは依然公開鍵についてThunderbird組み込みの鍵束を参照するので、自分の公開鍵をOpenPGP鍵マネージャーから追加しておく必要がある。
 </p>
 
 <h2>
