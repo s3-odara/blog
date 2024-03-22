@@ -101,7 +101,7 @@ article li:has(> a) {
 @media screen and (prefers-color-scheme: dark) {
 body {
   background-color: #223331;
-  color: #e1e1e1;
+  color: #fefefe;
 }
 a {
   color:#8fcdff;
