@@ -51,7 +51,7 @@ a {
 @media screen {
 a:focus,
 a:hover {
-  color:#005a6a;
+  color:#005664;
 }
 
 a:visited {
@@ -66,7 +66,6 @@ code {
 }
 
 pre code {
-  margin: 0;
   background-color: #f2f1f1;
   border-radius: 0.6em;
   border-style: solid;
@@ -84,12 +83,6 @@ header > time {
   font-size: medium;
 }
 
-@media screen and (max-width: 40em) {
-article li:has(> a) {
-  margin: 0.5em 0;
-}
-}
-
 article > dl > dd:has(+ dt) {
   margin-bottom: 0.5em;
 }
@@ -97,6 +90,12 @@ article > dl > dd:has(+ dt) {
 img {
   max-width: 100%;
   height: auto;
+}
+
+@media screen and (max-width: 40em) {
+article li:has(> a) {
+  margin: 0.5em 0;
+}
 }
 
 @media screen and (prefers-color-scheme: dark) {
@@ -122,7 +121,6 @@ code {
   background-color: #264e48;
 }
 pre code {
-  margin: 0;
   background-color: #202224;
 }
 }

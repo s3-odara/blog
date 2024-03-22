@@ -27,8 +27,8 @@ mirror: <a rel="alternate" href="https://blog.omae.dev/">https://blog.omae.dev/<
 <h1 id="小原晴太">
 About 小原晴太/s3-odara
 </h1>
-<time datetime="2024-01-15">
-2024年1月15日
+<time datetime="2024-03-23">
+2024年3月23日
 </time>
 </header>
 
@@ -58,7 +58,9 @@ PGP主鍵とその紐付け
 <dl>
 
 <dt>PGP主鍵公開鍵</dt>
-<dd><a href="./files/s3-odara.asc">B353 1E57 3A66 76E8 A920 60B3 879D 4D00 108D 4015</a> (or get key on <a href="https://wiki.gnupg.org/WKD">Web Key Directory</a>, <a href="https://datatracker.ietf.org/doc/html/rfc4398#section-3.3">DNS CERT</a>, <a href="https://keys.mailvelope.com/pks/lookup?op=get&search=0xB3531E573A6676E8A92060B3879D4D00108D4015">https://keys.mailvelope.com/</a>, <a href="https://keyserver.ubuntu.com/pks/lookup?search=0xB3531E573A6676E8A92060B3879D4D00108D4015&fingerprint=on&exact=on&op=index">https://keyserver.ubuntu.com/</a>, <a href="https://keys.openpgp.org/search?q=0xB3531E573A6676E8A92060B3879D4D00108D4015">https://keys.openpgp.org/</a>)</dd>
+<dd><a href="./files/s3-odara.asc">B353 1E57 3A66 76E8 A920 60B3 879D 4D00 108D 4015</a> (or get key on <a href="https://datatracker.ietf.org/doc/draft-koch-openpgp-webkey-service/">WKD</a>, <a href="https://datatracker.ietf.org/doc/html/rfc4398#section-3.3">CERT</a>, or <a href="https://web.archive.org/web/20070316082839/http://www.g10code.de/docs/pka-intro.de.pdf">PKA</a> (query DNS for haruta._pka.s3-odara.net. IN TXT).</dd>
+
+<pre><code>&amp; gpg --auto-key-locate clear,nodefault,cert,wkd --locate-keys haruta@s3-odara.net</code></pre>
 
 <dt>ドメイン名</dt>
 <dd>s3-odara.net. TXTレコードを参照</dd>
@@ -103,7 +105,7 @@ PGP主鍵とその紐付け
 <dd><a href="matrix:u/s3-odara:catgirl.cloud">@s3-odara:catgirl.cloud</a> (OTR: 6A477670 D2B128A5 2FA3A497 995ED365 BAE82EB2)</dd>
 
 <dt>IRC (nishi.boats)</dt>
-<dd><a href="ircs://irc.nishi.boats/#japanese,s3-odara">s3-odara@irc.nishi.boats</a> (OTR: 8B8C16F8 11D8850D 0BE28DAD 49E9F853 8A962639)</dd>
+<dd><a href="ircs://irc.nishi.boats/s3-odara,isnick">s3-odara@irc.nishi.boats</a> (OTR: 8B8C16F8 11D8850D 0BE28DAD 49E9F853 8A962639)</dd>
 
 <dt>Discord</dt>
 <dd>@s3_odara</dd>
