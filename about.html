@@ -60,7 +60,7 @@ PGP主鍵とその紐付け
 <dt>PGP主鍵公開鍵</dt>
 <dd><a href="./files/s3-odara.asc">B353 1E57 3A66 76E8 A920 60B3 879D 4D00 108D 4015</a> (or get key on <a href="https://datatracker.ietf.org/doc/draft-koch-openpgp-webkey-service/">WKD</a>, <a href="https://datatracker.ietf.org/doc/html/rfc4398#section-3.3">CERT</a>, or <a href="https://web.archive.org/web/20070316082839/http://www.g10code.de/docs/pka-intro.de.pdf">PKA</a> (query DNS for haruta._pka.s3-odara.net. IN TXT).</dd>
 
-<pre><code>&amp; gpg --auto-key-locate clear,nodefault,cert,wkd --locate-keys haruta@s3-odara.net</code></pre>
+<pre><code>$ gpg --auto-key-locate clear,nodefault,cert,wkd --locate-keys haruta@s3-odara.net</code></pre>
 
 <dt>ドメイン名</dt>
 <dd>s3-odara.net. TXTレコードを参照</dd>
