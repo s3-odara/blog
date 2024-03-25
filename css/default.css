@@ -6,8 +6,18 @@ body {
 
 @media screen and (min-width: 40em) {
 article {
-  padding-left: 0.5em;
-  padding-right: 0.5em;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+}
+
+@media screen and (min-width: 70em) {
+article {
+  padding-left: 3%;
+  padding-right: 3%;
+}
+body > header, footer {
+  padding-left: 1em;  
 }
 }
 
