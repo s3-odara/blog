@@ -16,7 +16,7 @@ article {
   padding-left: 3%;
   padding-right: 3%;
 }
-body > header, footer {
+body > header, body > footer {
   padding-left: 1em;  
 }
 }
