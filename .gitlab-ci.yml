@@ -10,6 +10,7 @@ deploy:
     - echo "Deployment successful"
 
 pages:
+  stage: deploy
   script:
     - mkdir .public
     - cp -r * .public
