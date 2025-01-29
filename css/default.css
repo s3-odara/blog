@@ -17,7 +17,7 @@ article {
   padding-right: 3%;
 }
 body > header, body > footer {
-  padding-left: 1em;  
+  padding-left: 0.5em;  
 }
 }
 
@@ -41,7 +41,7 @@ blockquote *:last-child {
 
 blockquote div {
   padding: 1em;
-  background: #b7dcd5;
+  background: #b8e4dc;
   border-radius: 0.6em;
 }
 
@@ -55,7 +55,7 @@ blockquote p::after {
 }
 
 a {
-  color:#036;
+  color:#002751;
 }
 
 @media screen {
@@ -76,7 +76,7 @@ code {
 }
 
 pre code {
-  background-color: #f2f1f1;
+  background-color: #f6f5f5;
   border-radius: 0.6em;
   border-style: solid;
   border-width: thin;

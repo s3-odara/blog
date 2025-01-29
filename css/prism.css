@@ -19,7 +19,7 @@ https://prismjs.com/download.html#themes=prism-solarizedlight&languages=markup+c
 .token.symbol,
 .token.deleted
 .token.namespace {
-	color: #024e9f; /* blue */
+	color: #703d41; /* blue */
 }
 
 .token.selector,
@@ -29,7 +29,7 @@ https://prismjs.com/download.html#themes=prism-solarizedlight&languages=markup+c
 .token.builtin,
 .token.url,
 .token.inserted {
-	color: #7802ca; /* cyan */
+	color: #5f4c19; /* cyan */
 }
 
 
@@ -40,18 +40,18 @@ https://prismjs.com/download.html#themes=prism-solarizedlight&languages=markup+c
 .token.atrule,
 .token.attr-value,
 .token.keyword {
-	color: #095e01; /* green */
+	color: #255a41; /* green */
 }
 
 .token.function,
 .token.class-name {
-	color: #794301; /* yellow */
+	color: #1c556f; /* yellow */
 }
 
 .token.regex,
 .token.important,
 .token.variable {
-	color: #a60803; /* orange */
+	color: #57446e; /* orange */
 }
 
 .token.important,
@@ -75,7 +75,7 @@ https://prismjs.com/download.html#themes=prism-solarizedlight&languages=markup+c
 .token.symbol,
 .token.deleted
 .token.namespace {
-	color: #66b0ff;
+	color: #fbc6c8;
 }
 .token.selector,
 .token.attr-name,
@@ -84,23 +84,23 @@ https://prismjs.com/download.html#themes=prism-solarizedlight&languages=markup+c
 .token.builtin,
 .token.url,
 .token.inserted {
-	color: #d291ff;
+	color: #e6d4a8;
 }
 .token.entity {
-	color: #acacac;
+	color: #d2d2d2;
 }
 .token.atrule,
 .token.attr-value,
 .token.keyword {
-	color: #65c15d;
+	color: #b3e2c8;
 }
 .token.function,
 .token.class-name {
-	color: #d7a568;
+	color: #adddf7;
 }
 .token.regex,
 .token.important,
 .token.variable {
-	color: #f4918e;
+	color: #deccf7;
 }
 }
