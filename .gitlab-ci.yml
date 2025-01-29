@@ -8,3 +8,15 @@ deploy:
     - aws configure set region $AWS_DEFAULT_REGION
     - aws s3 sync . s3://wwws3-odaranet  --endpoint-url https://6ecd930c8cd4dc63f87c9398762626e8.r2.cloudflarestorage.com --exclude ".git*" --delete
     - echo "Deployment successful"
+
+pages:
+  script:
+    - mkdir .public
+    - cp -r * .public
+    - cp -r .well-known .public
+    - mv .public public
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
