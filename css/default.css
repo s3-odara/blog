@@ -1,6 +1,7 @@
 body {
-  font-size: large;
+  font-size: 1.25em;
   overflow-wrap: break-word;
+  text-underline-offset: 0.15em;
 }
 
 @media screen{
@@ -39,38 +40,38 @@ a:focus, a:hover {
 
 @media  (min-width: 40em) {
 article {
-  padding-left: 1em;
-  padding-right: 1em;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 }
 
 @media  (min-width: 50em) {
 article {
-  max-width: 50em;
+  max-width: 50rem;
   margin-left: auto;
   margin-right: auto;
 }
 
 body > header, body > footer {
-  padding-left: 0.5em;  
+  padding-left: 0.5rem;
 }
 }
 
-@media (max-width: 35em) {
+@media (max-width: 35rem) {
 blockquote {
   margin-left: 0rem;
   margin-right: 0rem;
 }
 }
 
-@media (max-width: 40em) {
+@media (max-width: 40rem) {
 
 article li:has(> a) {
-  margin: 0.3em 0;
+  margin: 0.3rem 0;
 }
 
 main li:has(> a) {
-  margin: 0.2em 0;
+  margin: 0.2rem 0;
 }
 }
 }
@@ -80,8 +81,8 @@ article h1, h2 {
   }
 
 article {
-  padding-bottom: 2em;
-  padding-top: 0.5em;
+  padding-bottom: 2rem;
+  padding-top: 0.5rem;
 }
 
 
@@ -99,7 +100,7 @@ blockquote *:last-child {
 
 blockquote div {
   padding: 1em;
-  border-radius: 0.6em;
+  border-radius: 0.6rem;
   border-style: solid;
   border-width: thin;
 }
@@ -114,16 +115,16 @@ blockquote p::after {
 }
 
 code {
-  border-radius: 0.3em;
-  padding: 0 0.2em;
+  border-radius: 0.3rem;
+  padding: 0.1rem 0.2rem;
   margin: 0 0.1em;
   border-style: solid;
   border-width: thin;
 }
 
 pre code {
-  border-radius: 0.6em;
-  padding: 1em;
+  border-radius: 0.6rem;
+  padding: 1rem;
   display: block;
   overflow-x: auto;
 }
@@ -133,11 +134,11 @@ header > h1 {
 }
 
 header > time {
-  font-size: medium;
+  font-size: 1rem;
 }
 
 article > dl > dd:has(+ dt) {
-  margin-bottom: 0.5em;
+  margin-bottom: 0.5rem;
 }
 
 img {
