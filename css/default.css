@@ -6,33 +6,26 @@ body {
 @media screen{
 
 body {
-  background-color: #e4f0ee;
-}
-
-article {
-  color: #1c362e;
+  background-color: #e8eeed;
 }
 
 blockquote div {
-  color: #000;
   background: #b7dcd5;
   border-color: #000;
 }
 
 code {
-  color: #000;
   background-color: #cae0d9;
   border-color: #389982;
 }
 
 pre code {
-  color: #2c2c2c;
   background-color: #f6f5f5;
   border-color: #000;
 }
 
-a {
-  color:#002751;
+a:link {
+  color: #344e00;
 }
 
 a:visited {
@@ -40,21 +33,14 @@ a:visited {
 }
 
 a:focus, a:hover {
-  color:#005664;
+  color: #000;
+  background-color: #aadbe8;
 }
 
 @media  (min-width: 40em) {
 article {
   padding-left: 1em;
   padding-right: 1em;
-}
-
-article li:has(> a) {
-  margin: 0.3em 0;
-}
-
-main li:has(> a) {
-  margin: 0.2em 0;
 }
 }
 
@@ -69,6 +55,24 @@ body > header, body > footer {
   padding-left: 0.5em;  
 }
 }
+
+@media (max-width: 35em) {
+blockquote {
+  margin-left: 0rem;
+  margin-right: 0rem;
+}
+}
+
+@media (max-width: 40em) {
+
+article li:has(> a) {
+  margin: 0.3em 0;
+}
+
+main li:has(> a) {
+  margin: 0.2em 0;
+}
+}
 }
 
 article h1, h2 {
@@ -76,7 +80,6 @@ article h1, h2 {
   }
 
 article {
-  color: #1c362e;
   padding-bottom: 2em;
   padding-top: 0.5em;
 }
@@ -142,6 +145,11 @@ img {
   height: auto;
 }
 
+@media print {
+a {
+  color:#000;
+}
+}
 
 @media screen and (prefers-color-scheme: dark) {
 body {

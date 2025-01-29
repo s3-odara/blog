@@ -2,10 +2,10 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title> | s3-odaraのブログ</title>
+<title>PGP鍵の配布と検証方法の考察 | s3-odaraのブログ</title>
 <meta name="description" content="">
 <meta name="viewport" content="initial-scale=1">
-<link rel="canonical" href="https://www.s3-odara.net/article/">
+<link rel="canonical" href="https://www.s3-odara.net/article/pgp-distribution.html">
 <link rel="stylesheet" type="text/css" href="../css/default.css">
 </head>
 
@@ -15,8 +15,8 @@
 <nav>
 <a href="../index.html">home</a>
 <p>
-mirror: <a rel="alternate" href="https://blog.omae.dev/">https://blog.omae.dev/</a><br>
-about: <a rel="auther" href="../about.html">https://s3-odara.net/about</a>
+about: <a rel="auther" href="../about.html">https://s3-odara.net/about</a><br>
+mirror: <a rel="alternate" href="https://www.odarah.org/">https://www.odarah.org</a>
 </p>
 </nav>
 </header>
@@ -24,11 +24,240 @@ about: <a rel="auther" href="../about.html">https://s3-odara.net/about</a>
 <article>
 <header>
 <h1>
-PGP鍵の配布方法の考察
+PGP鍵の配布と検証方法の考察
 </h1>
-<time datetime="2024-03-22">
-2024-03-22
+<time datetime="2025-01-30">
+2025-01-30
 </time>
 </header>
 
+
 <p>
+何年か前に<a href="https://text.baldanders.info/openpgp/openpgp-key-management/">この記事</a>を見た。それから7年ぐらい経ち、少し鍵管理と検証の主流も変わってきたと思うので、
+PGP鍵の配布と検証を行うためにどのような方法があるか調べて自分用にメモしておく。
+</p>
+
+<p>
+PGP鍵を使う時は公開鍵がその本人のものだということを確かめる必要がある。
+SSHでも同じで、そちらでは最初に別の通信路で公開鍵の真正性を確かめる方法を取ることが多い。
+</p>
+
+<p>
+しかし、PGPの場合は少し面倒になってくる。PGPは自身のアイデンティティとして通信や意思表示の証明に使うからだ。
+</p>
+
+<p>
+ソフトウェアのダウンロード時にソフトウェアと共にPGP署名とPGP公開鍵を配布している場合がある。
+しかし、同じサイトから一緒にダウンロードした公開鍵でソフトウェアが改竄されていないか検証しても意味がない。
+通信路かサーバ上のファイルを改竄できる攻撃者なら、共に配布されるPGP署名も改竄できるからだ。
+</p>
+
+<p>
+GnuPGで推奨される方法としては電話で公開鍵を伝え合う、直接合って身分証明書を確認した上で署名する、名刺に書いて渡すなどがあるが、
+これではオンラインで連絡を取り合う大半の人が検証不可能である。
+世界中の人間が友達と鍵署名パーティーをするなら六次の隔たりでなんとかなるかもしれないが、現実にそんな状況が起こる見込みはない。
+</p>
+
+<p>
+インターネット上である程度信頼できる方法で鍵の配布、検証を行う方法がいくつか考案、運用されて流行り廃りがあるのでそれぞれについて書いてみる。
+</p>
+
+
+<h2>
+DNSで配布する方法
+</h2>
+
+<p>
+PGP公開鍵サーバーは基本的に鍵の検証機能を持たない。webサーバーからhttpsを使って配布してもCAの信頼性に依存することになる。
+それならDNSを信用しようということでドメイン名の所有権とDNSに頼る派閥が存在する。TLSのDANEなどと同じ考えだ。
+<p>
+
+<p>
+DNSには様々な方法で偽の応答をキャッシュさせる攻撃が知られている。
+webサイトへのアクセス時でも偽のIPアドレスに誘導されることは問題だが、鍵の配布や検証に使うなら尚更ということで大半の場合でDNSSECが推奨される。
+</p>
+
+<p>
+CAを信用しないのにレジストリとレジストラは信用できるというのはよくわからないが、
+DNSSEC推進者の主張ではCAが偽の証明書を発行するような状況でもDNSSECは信頼できるとされることが多い。
+</p>
+
+<p>
+鍵を直接DNS権威サーバに応答させる方法では、その巨大な応答がDNS amp攻撃に悪用されやすくなる他、毒入れの攻撃対象領域も拡がることに留意が必要である。
+</p>
+
+<h3>
+PGP CERTレコード
+</h3>
+
+<p>
+<a href="https://datatracker.ietf.org/doc/html/rfc4398#section-3.3">RFC4398</a>に基づく方法。OpenPGPだけでなくいくつかの鍵が規定されている。
+</p>
+
+<p>
+メールアドレスがfuga@hoge.exampleだとすると、<code>fuga.hoge.example. IN CERT 3 0 15 &lt;base64 encoded binary of pubkey&gt;</code>
+このような形式でDNSに公開鍵を保存することになる。
+<p>
+
+<p>
+ユーザー名以外に公開鍵IDから検索できるようにする方法も提案されており、次のようなDNSレコードを公開することで公開鍵指紋とドメイン名が分かっている場合に検索できるようにすることができる。
+</p>
+
+<pre><code>9CD0D89D.hoge.example. IN CNAME fuga.hoge.example.
+7850C26C9CD0D89D.hoge.example. IN CNAME fuga.hoge.example.
+A9993E364706816ABA3E25717850C26C9CD0D89D.hoge.example. IN CNAME fuga.hoge.example.</code></pre>
+
+<h4>
+欠点
+</h4>
+
+<p>
+巨大な鍵をDNSサーバに置くことによる一般的な問題に加え、
+メールアドレスは大文字小文字を区別するが、ドメイン名は区別しないためメールアドレスの衝突が起こる可能性がある。
+自分一人だけがメールを使うドメイン名か、あるいは適切に管理しないと他人の公開鍵を取得しかねない。
+</p>
+
+<h4>
+利点
+</h4>
+
+<p>
+人力でdigをして取得しやすい。
+</p>
+
+<h3>
+IPGP CERTレコード
+</h3>
+
+<p>CERTレコードの「I」付きバリエーションの一つ。鍵そのものではなく、ハッシュ値と入手できる鍵サーバーを記述する。</p>
+
+<h4>欠点</h4>
+<p>DNSで完結しない。可用性はDNSと指定したサーバーの両方に依存することになる。</p>
+
+<h4>利点</h4>
+<p>DNSに置く鍵の大きさを小さく抑えることができる。DNS応答のサイズを小さくすることは、攻撃対象領域を減らすのに効果的である。</p>
+
+<h3>
+DNS PKA
+</h3>
+
+<p>
+GnuPGで一時期サポートされていた方法である。IPGP CERT RR方式に似ているが、txtレコードとプレーンテキストを用いる点が違う。
+</p>
+
+
+DNSでの使用可能文字と大文字小文字の問題に対処するために<a href="https://lists.gnupg.org/pipermail/gnupg-devel/2015-February/029544.html">ハッシュとエンコードを導入したり</a>DANEのドラフトを実装したりしていたが、DANE for OPENPGPKEYの勧告やWeb Key Directoryの実装などに伴い必要性が乏しくなり
+<a href="https://dev.gnupg.org/rG7f3ce66ec56a5aea6170b7eb1bda5626eb208c83">GnuPGでのサポートが廃止された。</a>
+つまり2024年現在PKAを参照するソフトウェアはないと言っていい。
+
+<h4>
+欠点
+</h4>
+
+<p>
+サポートするソフトウェアがない。独自機能のため標準化がされていない。
+</p>
+
+<h4>
+利点
+</h4>
+
+<p>
+特にない。強いて言えば簡単で、DNSに鍵そのものを置く必要がないところか。
+</p>
+
+<h3>
+DANE for OPENPGPKEY
+</h3>
+
+<p>
+証明書などをDNSSEC付きのレコードで検証するプロトコルのOPENPGP版。
+メールアドレスのローカルパートのSHA-256ハッシュを16進数でエンコードし、28オクテット (56文字) に切り詰めて<code>&lt;encoded_localpart&gt;._openpgpkey.hoge.example IN OPENPGPKEY &lt;base64_encoded_pubkey&gt;</code>のようにして使う。
+</p>
+
+<h4>
+欠点
+</h4>
+
+<p>
+DNSサーバに巨大な鍵を直接置くこと。
+</p>
+
+<h4>
+利点
+</h4>
+
+<p>
+CERTレコードに定義されるPGP鍵の上位互換である。 (と、<a href="https://www.rfc-editor.org/rfc/rfc7929.html#section-1.1">RFCに書いてある。</a>)
+大文字小文字の区別の問題やDNSで使えない文字の問題に解決策を提供している。
+</p>
+
+<h2>
+HTTPで配布する方法
+</h2>
+
+<h3>
+PGP公開鍵サーバー
+</h3>
+
+<p>HPKPで鍵の同期と配布を行う、昔からある鍵サーバー。<a href="https://zenn.dev/zunda/scraps/6ea8f38619cee4">基本的に鍵の削除はできず</a>、誰かの鍵に各々勝手に署名を付して、信頼の輪による検証をサポートする。
+<a href="https://web.archive.org/web/20220119094712/https://www.sks-keyservers.net/">鍵サーバー同士で同期している</a>ことが多かったので、一つの鍵サーバーにアップロードしておけば十分だった。<p>
+
+<p>しかし、GDPRの要求や、署名を大量に付けるスパムの発生が問題になって運用を取りやめる鍵サーバーも増えた他、
+信頼の輪モデルはうまく普及せず、結果的に真正性の担保のない公開鍵サーバーからダウンロードした鍵を元に場当たり的に「最初に使った鍵を信じる」ポリシーで運用している人が多かったと考えられる。信頼する人間の署名がない鍵を絶対に使わない方針でストイックに信頼の輪モデルを実行していた人がいたら教えてほしい。</p>
+
+<p>このような問題の解決策として、鍵の所有者の確認と削除が可能で、第三者による署名をサポートせず、他の鍵サーバーとの同期もしない<a href="https://gitlab.com/keys.openpgp.org/hagrid">「新しい」アプローチの鍵サーバー</a>が開発され、
+2024年現在では実用できる状態である。</p>
+
+<p>例えばkeys.openpgp.org、keys.mailvelope.comなどがこの新しいアプローチの鍵サーバーで、
+登録や編集には公開鍵IDに含まれるメールアドレスの確認が必要になる。
+この鍵サーバーにあるものが本人のものだと確実に信頼できるわけではないが、偽の鍵の蔓延などの問題はかなり解決できる。</p>
+
+<h4>欠点</h4>
+
+<p>旧来のものでは誰でも鍵をアップロードできるので、誰かの名前の付いた鍵があってもそれが真正だという証明は全くない。</p>
+
+<h4>利点</h4>
+
+<p>httpを利用して配布するので、大容量の鍵でも問題が発生しない。
+無料のサーバーがいくつもあり、pgpソフトウェアから使うことも容易である。おそらく一番普及した方法。</p>
+
+<h3>
+Web Key Directory
+</h3>
+
+<p>PGP鍵を配布する標準としてはおそらくもっとも新しいもの。まだRFCドラフトなので標準にならない可能性もある。</p>
+
+<p>メールアドレスのドメインパートと紐づくサーバーにHTTPSで問い合わせて鍵を入手する方法であり、
+メールボックスを管理する事業者レベルで対応してユーザーの鍵を置いておき、自動でPGP暗号化ができるようにすることなどが想定されている。</p>
+
+<p>そのため鍵の追加や削除を自動化する方法なども共に標準化されているが、自分一人の使うドメイン名なら関係なく手動で行えばいい。</p>
+
+<p>Web Key Directoryもメールアドレスローカルパートのハッシュ値をエンコードしてユーザーを区別する。具体的にはローカルパートのSHA-1ハッシュをZ-Base32エンコードした文字列を使う。鍵の場所を示すURLは次のようになる。鍵自体はバイナリで設置する必要がある。</p>
+
+<pre><code>https://openpgpkey.hoge.example/.well-known/openpgpkey/domain.org/hu/&lt;encoded_localpart&gt;
+https://hoge.example/.well-known/openpgpkey/hu/&lt;encoded_localpart&gt;</code></pre>
+
+<p>keyoxideは<a href="https://keyoxide.org/util/wkd">これを計算するためのツール</a>を公開している。</p>
+
+<h4>欠点</h4>
+
+<p>メールアドレスのドメイン名が自分の制御下にない場合、事業者が対応しないと使うことができない。</p>
+
+<h4>利点</h4>
+
+<p>そこにある鍵がメールアドレス所有者のものだとある程度信じることができる。対応するソフトウェアも増えている。</p>
+
+<h2>まとめ</h2>
+
+<p>基本は<a href=https://keys.openpgp.org/>keys.openpgp.org</a>か<a href=https://keys.mailvelope.com/>keys.mailvelope.com</a>。メールアドレスのドメインパートが自分の制御下ならWKD、DNSSECが好きならDANE for OPENPGPを使おう。</p>
+
+</article>
+
+<footer>
+<a href="../index.html">s3-odaraのサイト</a> by <a rel="auther" href="../about.html">小原晴太</a> is Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a><br>
+<div class="center"> <a href="../index.html">home</a> </div>
+</footer>
+</body>
+</html>
+
