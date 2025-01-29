@@ -4,3 +4,4 @@ https://www.s3-odara.net/article/nip-04_warning.html
 https://www.s3-odara.net/article/started-blog.html
 https://www.s3-odara.net/article/nostr-copyright.html
 https://www.s3-odara.net/article/pgpkey-yubikey.html
+https://www.s3-odara.net/article/pgp-distribution.html
