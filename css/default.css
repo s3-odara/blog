@@ -11,17 +11,23 @@ article {
 }
 }
 
-@media screen and (min-width: 70em) {
+@media screen and (min-width: 50em) {
 article {
-  padding-left: 3%;
-  padding-right: 3%;
+  max-width: 50em;
+  margin-left: auto;
+  margin-right: auto;
 }
 body > header, body > footer {
   padding-left: 0.5em;  
 }
 }
 
+article h1, h2 {
+    font-feature-settings: "palt" 1;
+  }
+
 article {
+  color: #1c362e;
   padding-bottom: 2em;
   padding-top: 0.5em;
 }
@@ -40,9 +46,13 @@ blockquote *:last-child {
 }
 
 blockquote div {
+  color: #000;
   padding: 1em;
-  background: #b8e4dc;
+  background: #b7dcd5;
   border-radius: 0.6em;
+  border-style: solid;
+  border-width: thin;
+  border-color: #000;
 }
 
 
@@ -70,16 +80,20 @@ a:visited {
 }
 
 code {
+  color: #000;
   background-color: #cae0d9;
   border-radius: 0.3em;
   padding: 0 0.3em;
+  border-style: solid;
+  border-width: thin;
+  border-color: #389982;
 }
 
 pre code {
+  color: #2c2c2c;
   background-color: #f6f5f5;
   border-radius: 0.6em;
-  border-style: solid;
-  border-width: thin;
+  border-color: #000;
   padding: 1em;
   display: block;
   overflow-x: auto;
@@ -110,27 +124,35 @@ article li:has(> a) {
 
 @media screen and (prefers-color-scheme: dark) {
 body {
-  background-color: #223331;
-  color: #fefefe;
+  background-color: #012824;
+  color: #e6e6e6;
+}
+
+article {
+   color: #e6e6e6;
 }
 a {
-  color:#8fcdff;
+  color: #c2dbff;
 }
 a:focus,
 a:hover {
-  color: #82ecff;
+  color: #8ef0d3;
 }
 
 a:visited {
-  color: #e8a9e8;
+  color: #f5ccf7;
 }
 blockquote div {
-  background: #264e48;
+  color: #fff;
+  border-color: #e6e6e6;
+  background: #2f645c;
 }
 code {
-  background-color: #264e48;
+  color: #f2f2f2;
+  background-color: #1c534b;
 }
 pre code {
+  color: #ececec;
   background-color: #202224;
 }
 }
