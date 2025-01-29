@@ -83,7 +83,8 @@ code {
   color: #000;
   background-color: #cae0d9;
   border-radius: 0.3em;
-  padding: 0 0.3em;
+  padding: 0 0.2em;
+  margin: 0 0.1em;
   border-style: solid;
   border-width: thin;
   border-color: #389982;
@@ -152,6 +153,7 @@ code {
   background-color: #1c534b;
 }
 pre code {
+  border-color: #e6e6e6;
   color: #ececec;
   background-color: #202224;
 }
