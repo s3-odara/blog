@@ -161,7 +161,7 @@ body {
 article {
    color: #e6e6e6;
 }
-a {
+a:link {
   color: #c2dbff;
 }
 a:focus,
