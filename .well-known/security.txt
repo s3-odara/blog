@@ -3,8 +3,7 @@ Hash: SHA512
 
 # Canonical URI
 Canonical: https://www.s3-odara.net/.well-known/security.txt
-Canonical: https://blog.omae.dev/.well-known/security.txt
-Canonical: https://omae.dev/.well-known/security.txt
+Canonical: https://www.odarah.org/.well-known/security.txt
 
 # My e-mail address
 Contact: mailto:haruta@s3-odara.net
@@ -16,12 +15,12 @@ Encryption: openpgp4fpr:B3531E573A6676E8A92060B3879D4D00108D4015
 # Languages I understand
 Preferred-Languages: ja, en
 
-Expires: 2025-03-20T00:00:00.000Z
+Expires: 2026-01-30T00:00:00.000Z
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEARYKAB0WIQStqTHSNaHpZKfm3o3xouKTzjuGFwUCZfsAuAAKCRDxouKTzjuG
-FyQOAQDzmsqh59U+r4FCjjOrh2yFeTsnp6zEPV9edg/yGbkV4gD/XOm33xFOowB3
-fgVnJ14+ck+w0IC8EVXY0kDuGT/4pg4=
-=WCy3
+iHUEARYKAB0WIQStqTHSNaHpZKfm3o3xouKTzjuGFwUCZ5rfOgAKCRDxouKTzjuG
+FzwcAP4hpwNb3mcAFf9VTjuIm51CotuHJjN1R7bEQ1M8dpm5QwEA0BiLNycFHTwk
+4QCIPOmSwlOK9xY+E0KwrbNwP/4sig0=
+=ueQN
 -----END PGP SIGNATURE-----

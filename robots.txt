@@ -7,7 +7,6 @@ Disallow: /files/
 
 # 設定ファイルとか
 User-agent: *
-Disallow: /CNAME
 Disallow: /LICENSE
 Disallow: /README.md
 Disallow: /_config.yml
