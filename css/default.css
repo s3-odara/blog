@@ -164,14 +164,16 @@ article {
 a:link {
   color: #c2dbff;
 }
-a:focus,
-a:hover {
-  color: #8ef0d3;
-}
-
 a:visited {
   color: #f5ccf7;
 }
+
+a:focus,
+a:hover {
+  color: #fff;
+  background-color: #3e7e6c;
+}
+
 blockquote div {
   color: #fff;
   border-color: #e6e6e6;
