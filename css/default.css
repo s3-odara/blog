@@ -30,7 +30,7 @@ header {
     place-self: start;
   }
 
-  & > nav {
+  & > nav:has(a[href="../index.html"]) {
     place-self: center;
   }
 
@@ -136,17 +136,11 @@ article {
 }
 }
 
-@media  (min-width: 50em) {
+@media  (min-width: 80em) {
 article {
-  max-width: 50rem;
+  max-width: 80rem;
   margin-left: auto;
   margin-right: auto;
-}
-
-main {
-  max-width: 50dvw;
-  margin-left: auto;
-  margin-right:auto;
 }
 
 body > header > h1, body > footer {
