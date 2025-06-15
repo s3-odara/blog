@@ -1,9 +1,177 @@
+@charset "utf-8";
 body {
-  font-size: 1.25em;
+  display: grid;
+  grid-auto-columns: 100%;
+  grid-template-rows: auto 0.95fr auto;
+  height: 100dvh;
+  font-size: large;
   overflow-wrap: break-word;
   text-underline-offset: 0.15em;
+
+  & > header {
+    margin-bottom: 0.8em;
+    display: grid;
+    gap: 2em;
+  }
 }
 
+header {
+  & > nav {
+    font-size: 1.1em;
+    box-sizing: border-box;
+    padding-bottom: 0.8em;
+    border-bottom: 0.2em solid #555;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(5em, 1fr));
+    max-width: 95dvw;
+    gap: 0.8rem;
+    place-items: center;
+    place-content: center;
+    place-self: start;
+  }
+
+  & > nav {
+    place-self: center;
+  }
+
+  & > h1 {
+    margin-bottom: 0;
+  }
+
+  & > time {
+    font-size: 1rem;
+  }
+}
+
+article {
+  padding-bottom: 2rem;
+  padding-top: 0.5rem;
+
+  & h1, h2 {
+    font-feature-settings: "palt" 1;
+  }
+  
+  & > dl > dd:has(+ dt) {
+    margin-bottom: 0.5rem;
+  }
+}
+
+blockquote {
+  & div {
+    padding: 1em;
+    border-radius: 0.6rem;
+    border-style: solid;
+    border-width: thin;
+  }
+
+  & *:first-child {
+    margin-top: 0;
+  }
+
+  & *:last-child {
+    margin-bottom: 0;
+  }
+
+  & p::before {
+    content: '\201C';
+  }
+
+  & p::after {
+    content: '\201D';
+  }
+}
+
+code {
+  border-radius: 0.3rem;
+  padding: 0.1rem 0.2rem;
+  margin: 0 0.1em;
+  border-style: solid;
+  border-width: thin;
+}
+
+pre code {
+  border-radius: 0.6rem;
+  padding: 1rem;
+  display: block;
+  overflow-x: auto;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+hr {
+    width: 100%;
+}
+
+ul:has( a) {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.center {
+  text-align: center;
+}
+
+.banner {
+    --banner-width: 300px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(var(--banner-width), 1fr));
+    max-width: 100dvw;
+    gap: 0.5rem;
+    place-items: center;
+
+    & > a > img {
+      width: var(--banner-width);
+      height: auto;
+    }
+}
+
+/* メディアクエリ */
+@media  (min-width: 40em) {
+article {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+}
+
+@media  (min-width: 50em) {
+article {
+  max-width: 50rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+main {
+  max-width: 50dvw;
+  margin-left: auto;
+  margin-right:auto;
+}
+
+body > header > h1, body > footer {
+  padding-left: 0.5rem;
+}
+}
+
+@media (max-width: 35rem) {
+blockquote {
+  margin-left: 0rem;
+  margin-right: 0rem;
+}
+
+header > nav {
+  place-self: center;
+}
+}
+
+@media print {
+a {
+  color:#000;
+}
+}
+
+/* 色 */
 @media screen{
 
 body {
@@ -25,132 +193,22 @@ pre code {
   border-color: #000;
 }
 
-a:link {
-  color: #014888;
-}
+a {
 
-a:visited {
-  color:#606;
-}
-
-a:focus, a:hover {
-  color: #000;
-  background-color: #aadbe8;
-}
-
-@media  (min-width: 40em) {
-article {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-}
-
-@media  (min-width: 50em) {
-article {
-  max-width: 50rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-body > header, body > footer {
-  padding-left: 0.5rem;
-}
-}
-
-@media (max-width: 35rem) {
-blockquote {
-  margin-left: 0rem;
-  margin-right: 0rem;
-}
-}
-
-@media (max-width: 40rem) {
-
-article li:has(> a) {
-  margin: 0.3rem 0;
-}
-
-main li:has(> a) {
-  margin: 0.2rem 0;
-}
-}
-}
-
-article h1, h2 {
-    font-feature-settings: "palt" 1;
+  &:link {
+    color: #014888;
   }
 
-article {
-  padding-bottom: 2rem;
-  padding-top: 0.5rem;
+  &:visited {
+    color:#606;
+  }
+
+  &:focus, &:hover {
+    color: #000;
+    background-color: #aadbe8;
+  }
 }
 
-
-.center {
-  text-align: center;
-}
-
-blockquote *:first-child {
-  margin-top: 0;
-}
-
-blockquote *:last-child {
-  margin-bottom: 0;
-}
-
-blockquote div {
-  padding: 1em;
-  border-radius: 0.6rem;
-  border-style: solid;
-  border-width: thin;
-}
-
-
-blockquote p::before {
-  content: '\201C';
-}
-
-blockquote p::after {
-  content: '\201D';
-}
-
-code {
-  border-radius: 0.3rem;
-  padding: 0.1rem 0.2rem;
-  margin: 0 0.1em;
-  border-style: solid;
-  border-width: thin;
-}
-
-pre code {
-  border-radius: 0.6rem;
-  padding: 1rem;
-  display: block;
-  overflow-x: auto;
-}
-
-header > h1 {
-  margin-bottom: 0;
-}
-
-header > time {
-  font-size: 1rem;
-}
-
-article > dl > dd:has(+ dt) {
-  margin-bottom: 0.5rem;
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-@media print {
-a {
-  color:#000;
-}
-}
 
 @media screen and (prefers-color-scheme: dark) {
 body {
