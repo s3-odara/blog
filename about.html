@@ -52,13 +52,13 @@ PGP主鍵とその紐付け
 </h2>
 
 <p>
-<a href="./files/about.html.asc">この文書の署名をダウンロード</a>可能。Keyoxideの注釈と同じ要領で双方向に検証できる。
+<a href="./files/about.html.asc">この文書の署名付きバージョンをダウンロード</a>可能。Keyoxideの注釈と同じ要領で双方向に検証できる。
 </p>
 
 <dl>
 
 <dt>PGP主鍵公開鍵</dt>
-<dd><a href="./files/s3-odara.asc">B353 1E57 3A66 76E8 A920 60B3 879D 4D00 108D 4015</a> (or get key on <a href="https://datatracker.ietf.org/doc/draft-koch-openpgp-webkey-service/">WKD</a>, <a href="https://datatracker.ietf.org/doc/html/rfc4398#section-3.3">CERT</a>, or <a href="https://web.archive.org/web/20070316082839/http://www.g10code.de/docs/pka-intro.de.pdf">PKA</a> (query DNS for haruta._pka.s3-odara.net. IN TXT).</dd>
+<dd><a href="./files/s3-odara.asc">B353 1E57 3A66 76E8 A920 60B3 879D 4D00 108D 4015</a> (若しくは<a href="https://keys.openpgp.org/search?q=B3531E573A6676E8A92060B3879D4D00108D4015">keys.openpgp.org</a>、WKDで入手可能。</dd>
 
 <dd><pre><code>$ gpg --auto-key-locate clear,nodefault,wkd --locate-keys haruta@s3-odara.net</code></pre></dd>
 
@@ -66,7 +66,10 @@ PGP主鍵とその紐付け
 <dd><a href="dns:s3-odara.net?type=TXT">dns:s3-odara.net.?type=TXT</a></dd>
 
 <dt>ドメイン名</dt>
-<dd><a href="dns:s3-odara.net?type=TXT">dns:omae.dev.?type=TXT</a></dd>
+<dd><a href="dns:omae.dev?type=TXT">dns:omae.dev.?type=TXT</a></dd>
+
+<dt>ドメイン名</dt>
+<dd><a href="dns:odarah.org?type=TXT">dns:odarah.org.?type=TXT</a></dd>
 
 <dt>Twitter</dt>
 <dd><a href="https://twitter.com/s3_odara/status/1735849897906286911">@s3_odara</a></dd>
