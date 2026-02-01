@@ -19,20 +19,28 @@ header {
     font-size: 1.1em;
     box-sizing: border-box;
     padding-bottom: 0.8em;
-    border-bottom: 0.2em solid #555;
+    border-bottom: 3px solid #555;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(5em, 1fr));
     max-width: 95dvw;
-    gap: 0.8rem;
+    --nav-gap: 0.8rem;
+    gap: var(--nav-gap);
     place-items: center;
     place-content: center;
     place-self: start;
   }
 
-  & > nav a + a {
+  & > nav a {
+    position: relative;
+  }
+
+  & > nav a + a::before {
+    content: "";
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    left: calc(var(--nav-gap) / -2);
     border-left: 1px dotted currentColor;
-    padding-left: 0.6rem;
-    margin-left: 0.6rem;
   }
 
   & > nav:has(a[href="../index.html"]) {
@@ -163,10 +171,13 @@ header > nav:has(a[href="../index.html"]) {
   place-self: start;
 }
 
-header > nav:has(a[href="../index.html"]) a + a {
+header > nav:has(a[href="../index.html"]) a + a::before {
+  top: calc(var(--nav-gap) / -2);
+  bottom: auto;
+  left: 15%;
+  right: 15%;
+  border-left: 0;
   border-top: 1px dotted currentColor;
-  padding-top: 0.6rem;
-  margin-top: 0.6rem;
 }
 
 body > header > h1, body > footer {
