@@ -21,12 +21,13 @@ header {
     padding-bottom: 0.8em;
     border-bottom: 3px solid #555;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(5em, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(5em, max-content));
     max-width: 95dvw;
     --nav-gap: 0.8rem;
     gap: var(--nav-gap);
     place-items: center;
     place-content: center;
+    justify-content: center;
     place-self: start;
   }
 
