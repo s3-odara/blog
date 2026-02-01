@@ -1,17 +1,30 @@
 @charset "utf-8";
+:root {
+ text-autospace: normal;
+ text-spacing-trim: trim-start;
+ line-break: strict;
+ hyphens: auto;
+ overflow-wrap: anywhere;
+}
+
 body {
   display: grid;
   grid-auto-columns: 100%;
   grid-template-rows: auto 0.95fr auto;
   height: 100dvh;
-  overflow-wrap: break-word;
   text-underline-offset: 0.15em;
+  font-size: max(1rem, 20px);
 
   & > header {
     margin-bottom: 0.8em;
     display: grid;
     gap: 2em;
   }
+}
+
+h1, h2, h3 {
+  text-wrap: balance;
+  font-feature-settings: "palt" 1;
 }
 
 header {
@@ -21,14 +34,14 @@ header {
     padding-bottom: 0.8em;
     border-bottom: 3px solid #555;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(5em, max-content));
+    grid-template-columns: repeat(auto-fit, minmax(0, max-content));
     max-width: 95dvw;
-    --nav-gap: 0.8rem;
+    --nav-gap: 2.5rem;
     gap: var(--nav-gap);
     place-items: center;
     place-content: center;
-    justify-content: center;
     place-self: start;
+    margin-left: 0.5rem;
   }
 
   & > nav a {
@@ -38,10 +51,10 @@ header {
   & > nav a + a::before {
     content: "";
     position: absolute;
-    top: 15%;
-    bottom: 15%;
+    top: 5%;
+    bottom: 5%;
     left: calc(var(--nav-gap) / -2);
-    border-left: 1px dotted currentColor;
+    border-left: 1.5px dotted currentColor;
   }
 
   & > nav:has(a[href="../index.html"]) {
@@ -63,10 +76,6 @@ article {
   padding-bottom: 2rem;
   padding-top: 0.5rem;
 
-  & h1, h2 {
-    font-feature-settings: "palt" 1;
-  }
-  
   & > dl > dd:has(+ dt) {
     margin-bottom: 0.5rem;
   }
@@ -175,10 +184,10 @@ header > nav:has(a[href="../index.html"]) {
 header > nav:has(a[href="../index.html"]) a + a::before {
   top: calc(var(--nav-gap) / -2);
   bottom: auto;
-  left: 15%;
-  right: 15%;
+  left: 5%;
+  right: 5%;
   border-left: 0;
-  border-top: 1px dotted currentColor;
+  border-top: 1.5px dotted currentColor;
 }
 
 body > header > h1, body > footer {
