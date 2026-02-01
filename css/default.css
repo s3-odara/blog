@@ -5,6 +5,14 @@
  line-break: strict;
  hyphens: auto;
  overflow-wrap: anywhere;
+ letter-spacing: .05em;
+}
+
+html {
+  font-size: max(
+      1rem,
+      clamp(20px, calc(18px + 0.625vw), 26px)
+    );
 }
 
 body {
@@ -13,7 +21,7 @@ body {
   grid-template-rows: auto 0.95fr auto;
   height: 100dvh;
   text-underline-offset: 0.15em;
-  font-size: max(1rem, 20px);
+  font-size: 1rem;
 
   & > header {
     margin-bottom: 0.8em;
