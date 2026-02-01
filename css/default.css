@@ -23,24 +23,16 @@ header {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(5em, 1fr));
     max-width: 95dvw;
-    --nav-gap: 1.2rem;
-    gap: var(--nav-gap);
+    gap: 0.8rem;
     place-items: center;
     place-content: center;
     place-self: start;
   }
 
-  & > nav a {
-    position: relative;
-  }
-
-  & > nav a + a::before {
-    content: "";
-    position: absolute;
-    top: 15%;
-    bottom: 15%;
-    left: calc(var(--nav-gap) / -2);
+  & > nav a + a {
     border-left: 1px dotted currentColor;
+    padding-left: 0.6rem;
+    margin-left: 0.6rem;
   }
 
   & > nav:has(a[href="../index.html"]) {
@@ -172,18 +164,9 @@ header > nav:has(a[href="../index.html"]) {
 }
 
 header > nav:has(a[href="../index.html"]) a + a {
-  border-left: 0;
-  padding-left: 0;
-  margin-left: 0;
-}
-
-header > nav:has(a[href="../index.html"]) a + a::before {
-  top: calc(var(--nav-gap) / -2);
-  left: 15%;
-  right: 15%;
-  bottom: auto;
-  border-left: 0;
   border-top: 1px dotted currentColor;
+  padding-top: 0.6rem;
+  margin-top: 0.6rem;
 }
 
 body > header > h1, body > footer {
