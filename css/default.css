@@ -11,7 +11,8 @@
 html {
   font-size: max(
       1rem,
-      clamp( 20px, calc( 18.67px + 0.33vw ), 24px )
+      clamp( 1.25rem, calc( 1.17rem + 0.33vw ), 1.5rem )
+      /* clamp( 1.125rem, calc( 1rem + 0.5vw ), 1.5rem ) */
     );
 }
 
@@ -32,6 +33,14 @@ body {
 h1, h2, h3 {
   text-wrap: balance;
   font-feature-settings: "palt" 1;
+}
+
+h2 {
+  margin-block-start: 2rlh;
+}
+
+h3 {
+  margin-block-start: 1.5rlh;
 }
 
 header {
