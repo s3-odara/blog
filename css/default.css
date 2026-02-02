@@ -6,6 +6,15 @@
  hyphens: auto;
  overflow-wrap: anywhere;
  text-underline-offset: 0.15em;
+
+  /* レイアウトプリミティブ用 */
+  --gutter: clamp(0.75rem, 1vw, 1.5rem);
+  --wrapper-max-width: 70rem;
+  --flow-space: 1em;
+  --sidebar-target-width: 20rem;
+  --sidebar-content-min-width: 50%;
+  --switcher-target-container-width: 40rem;
+  --nav-rail-width: clamp(10rem, 12vw, 14rem);
 }
 
 html {
@@ -30,6 +39,22 @@ body {
   }
 }
 
+:where(body > header, article, body > footer) {
+  width: 100%;
+  box-sizing: border-box;
+  margin-inline: auto;
+  max-width: min(100%, var(--wrapper-max-width));
+  padding-inline: var(--gutter);
+}
+
+body > header {
+  --wrapper-max-width: 70rem;
+}
+
+article {
+  --wrapper-max-width: 43rem;
+}
+
 h1, h2, h3 {
   text-wrap: balance;
   font-feature-settings: "palt" 1;
@@ -50,19 +75,13 @@ header {
     box-sizing: border-box;
     padding-bottom: 0.8rem;
     border-bottom: 3px solid #555;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(0, max-content));
-    max-width: 95dvw;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
     --nav-gap: 2.5rem;
     gap: var(--nav-gap);
-    place-items: center;
-    place-content: center;
-    place-self: start;
-    margin-left: 0.5rem;
-
-    &:has(a[href="../index.html"]) {
-      place-self: center;
-    }
+    align-items: center;
+    justify-content: center;
 
     & a {
       position: relative;
@@ -98,6 +117,8 @@ article {
 }
 
 blockquote {
+  margin-inline: clamp(0rem, 3vw, 2rem);
+
   & div {
     padding: 1rem;
     border-radius: 0.6rem;
@@ -171,34 +192,18 @@ ul:has( a) {
 }
 
 /* メディアクエリ */
-@media  (min-width: 40rem) {
-  article {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-}
-
-@media  (min-width: 70rem) {
-  article {
-    max-width: 43rem;
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-
 @media  (min-width: 95rem) {
   header > nav:has(a[href="../index.html"]) {
     position: fixed;
-    top: 1rem;
-    left: 1rem;
-    width: 12rem;
+    top: var(--gutter);
+    left: var(--gutter);
+    width: var(--nav-rail-width);
     max-width: 20vw;
     z-index: 10;
     border-bottom: 0;
-    grid-template-columns: 1fr;
-    justify-items: start;
-    place-content: start;
-    place-self: start;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
   
     &::after {
       content: "";
@@ -216,23 +221,6 @@ ul:has( a) {
       transform: translateX(20%);
       border-left: 0;
       border-top: 1.5px dotted currentColor;
-    }
-  }
-  
-  body > header > h1, body > footer {
-    padding-left: 0.5rem;
-  }
-}
-
-@media (max-width: 35rem) {
-  blockquote {
-    margin-left: 0rem;
-    margin-right: 0rem;
-  }
-
-  header {
-    & > nav {
-      place-self: center;
     }
   }
 }
