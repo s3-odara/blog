@@ -252,6 +252,7 @@ ul:has( a) {
     overflow-wrap: anywhere;
     break-inside: avoid;
   }
+}
 
 /* 色 */
 @media screen{
