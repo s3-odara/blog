@@ -27,6 +27,7 @@ html {
 
 body {
   display: grid;
+  grid-auto-columns: 100%;
   grid-template-rows: auto 1fr auto;
   min-height: 100dvh;
   font-size: 1rem;
