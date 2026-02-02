@@ -7,6 +7,8 @@
 <meta name="viewport" content="initial-scale=1">
 <link rel="canonical" href="https://www.s3-odara.net/article/pgp-distribution.html">
 <link rel="stylesheet" type="text/css" href="../css/default.css">
+<link rel="stylesheet" type="text/css" href="../css/prism.css">
+<script defer src="../js/tools.js"></script>
 </head>
 
 <body>
@@ -101,7 +103,7 @@ PGP CERTレコード
 ユーザー名以外に公開鍵IDから検索できるようにする方法も提案されており、次のようなDNSレコードを公開することで公開鍵指紋とドメイン名が分かっている場合に検索できるようにすることができる。
 </p>
 
-<pre><code>9CD0D89D.hoge.example. IN CNAME fuga.hoge.example.
+<pre><code class="language-dns-zone">9CD0D89D.hoge.example. IN CNAME fuga.hoge.example.
 7850C26C9CD0D89D.hoge.example. IN CNAME fuga.hoge.example.
 A9993E364706816ABA3E25717850C26C9CD0D89D.hoge.example. IN CNAME fuga.hoge.example.</code></pre>
 
