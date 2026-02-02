@@ -230,6 +230,7 @@ ul:has( a) {
   body {
     display: block;
     min-height: auto;
+    font-size: 12pt;
   }
   pre,
   pre code {
