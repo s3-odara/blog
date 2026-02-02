@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $# -ne 1 ]]; then
+  echo "Usage: $0 path/to/file.html" >&2
+  exit 2
+fi
+
+in="$1"
+[[ -f "$in" ]] || { echo "Error: not found: $in" >&2; exit 1; }
+
+# h2/h3（id付き）だけを対象。#toc 配下は除外。
+HXPATH='(//*[self::h2 or self::h3][@id and not(ancestor::*[@id="toc"])])'
+
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "$tmpdir"' EXIT
+
+toc="$tmpdir/toc.html"
+out="$tmpdir/out.html"
+
+# 1) #toc のタグ名を取得（ファイルは書き換えない）
+toc_tag="$(xmllint --html --recover --xpath 'name(//*[@id="toc"][1])' "$in" 2>/dev/null || true)"
+if [[ -z "$toc_tag" ]]; then
+  echo 'Error: element with id="toc" not found (or HTML parse failed).' >&2
+  exit 1
+fi
+
+# 2) 対象見出し数
+count_raw="$(xmllint --html --recover --xpath "count($HXPATH)" "$in" 2>/dev/null || echo 0)"
+N="$(awk -v n="$count_raw" 'BEGIN{printf("%d", n+0)}')"
+
+# 3) 目次テキスト用のHTMLエスケープ
+xml_escape() {
+  sed -e 's/&/\&amp;/g' \
+      -e 's/</\&lt;/g'  \
+      -e 's/>/\&gt;/g'  \
+      -e 's/"/\&quot;/g' \
+      -e "s/'/\&apos;/g"
+}
+
+# 4) TOCスニペットを生成
+{
+  echo '<ol class="toc-list">'
+  open_h2=0
+  open_sub=0
+
+  if [[ "$N" -gt 0 ]]; then
+    for i in $(seq 1 "$N"); do
+      line="$(xmllint --html --recover --xpath \
+        "concat(name($HXPATH[$i]), '|||', string($HXPATH[$i]/@id), '|||', normalize-space(string($HXPATH[$i])))" \
+        "$in" 2>/dev/null || true)"
+
+      [[ -n "$line" ]] || continue
+      tag="${line%%|||*}"
+      rest="${line#*|||}"
+      hid="${rest%%|||*}"
+      title="${rest#*|||}"
+
+      [[ -n "$hid" && -n "$title" ]] || continue
+      title_esc="$(printf '%s' "$title" | xml_escape)"
+
+      if [[ "$tag" == "h2" ]]; then
+        if [[ "$open_sub" -eq 1 ]]; then
+          echo '    </ol>'
+          open_sub=0
+        fi
+        if [[ "$open_h2" -eq 1 ]]; then
+          echo '  </li>'
+          open_h2=0
+        fi
+        printf '  <li class="toc-h2"><a href="#%s">%s</a>\n' "$hid" "$title_esc"
+        open_h2=1
+
+      elif [[ "$tag" == "h3" ]]; then
+        if [[ "$open_h2" -eq 0 ]]; then
+          # 先行するh2が無いh3は落とす
+          continue
+        else
+          if [[ "$open_sub" -eq 0 ]]; then
+            echo '    <ol class="toc-sub">'
+            open_sub=1
+          fi
+          printf '      <li class="toc-h3"><a href="#%s">%s</a></li>\n' "$hid" "$title_esc"
+        fi
+      fi
+    done
+  fi
+
+  if [[ "$open_sub" -eq 1 ]]; then
+    echo '    </ol>'
+  fi
+  if [[ "$open_h2" -eq 1 ]]; then
+    echo '  </li>'
+  fi
+  echo '</ol>'
+} > "$toc"
+
+# 5) TOCの内側を置換
+TOC_TAG="$toc_tag" TOC_FILE="$toc" \
+  perl -0777 -pe '
+BEGIN {
+  $tag = $ENV{TOC_TAG};
+  $toc_raw = do { local $/; open my $fh, "<", $ENV{TOC_FILE}; <$fh> };
+}
+if (m{(^|\n)([ \t]*)<\s*\Q$tag\E\b[^>]*\bid\s*=\s*(["\x27])toc\3[^>]*>.*?</\s*\Q$tag\E\s*>}is) {
+  $indent = $2;
+  $toc = $toc_raw;
+  $toc =~ s/^/$indent  /mg;
+  s{(<\s*\Q$tag\E\b[^>]*\bid\s*=\s*(["\x27])toc\2[^>]*>).*?(</\s*\Q$tag\E\s*>)}
+   {$1\n$toc$indent$3}is;
+} else {
+  die "Error: failed to replace #toc block (no matching start tag or malformed HTML).\n";
+}
+' "$in" > "$out"
+
+mv -f "$out" "$in"
+echo "Updated nested TOC (h2->h3) in: $in"
