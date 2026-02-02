@@ -1,22 +1,13 @@
-/* PrismJS 1.29.0
-https://prismjs.com/download.html#themes=prism-solarizedlight&languages=markup+css+clike+javascript */
-/*
- Solarized Color Schemes originally by Ethan Schoonover
- http://ethanschoonover.com/solarized
-
- Ported for PrismJS by Hector Matos
- Website: https://krakendev.io
- Twitter Handle: https://twitter.com/allonsykraken)
-*/
+/* PrismJS 1.29.0 CSS*/
 /*modified by s3-odara */
 
 :root {
-	--prism-token-primary: #703d41; /* blue */
-	--prism-token-secondary: #5f4c19; /* cyan */
-	--prism-token-muted: #515050; /* base00 */
-	--prism-token-accent: #255a41; /* green */
-	--prism-token-highlight: #1c556f; /* yellow */
-	--prism-token-special: #57446e; /* orange */
+	--prism-token-primary: oklch(0.4944 0.1976 15.85); /* red */
+	--prism-token-secondary: oklch(0.4903 0.1 90); /* yellow */
+	--prism-token-muted: oklch(0.4891 0 0); /* glay */
+	--prism-token-accent: oklch(0.474 0.1058 160.63); /* green */
+	--prism-token-highlight: oklch(0.478 0.0972 232); /* blue */
+	--prism-token-special: oklch(0.5056 0.2633 304.16); /* purple */
 }
 
 .token.property,
