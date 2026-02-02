@@ -274,12 +274,12 @@ ul:has( a) {
       --color-link-hover: oklch(0.955 0 0);
       --color-link-hover-bg: oklch(0.5069 0.1225 151.92);
       --color-quote-bg: oklch(0.2628 0.0539 166.85);
-      --color-quote-border: oklch(1 0 0);
+      --color-quote-border: oklch(0.95 0 0);
       --color-code-text: oklch(0.9146 0.0407 166.85);
       --color-code-bg: oklch(0.2628 0.0539 166.85);
       --color-code-border: oklch(0.3803 0.097 174.4);
-      --color-pre-bg: oklch(0.0307 0 0);
-      --color-pre-border: oklch(1 0 0);
+      --color-pre-bg: oklch(0.1594 0 0);
+      --color-pre-border: oklch(0.95 0 0);
     }
   }
 
