@@ -182,18 +182,27 @@ header > nav:has(a[href="../index.html"]) {
   width: 12rem;
   max-width: 20vw;
   z-index: 10;
+  border-bottom: 0;
   grid-template-columns: 1fr;
   justify-items: start;
   place-content: start;
   place-self: start;
 }
 
+header > nav:has(a[href="../index.html"])::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 30%;
+  bottom: 0;
+  border-bottom: 3px solid #555;
+}
+
 header > nav:has(a[href="../index.html"]) a + a::before {
   top: calc(var(--nav-gap) / -2);
   bottom: auto;
-  left: 50%;
-  width: 2.4rem;
-  transform: translateX(-50%);
+  width: 7rem;
+  transform: translateX(20%);
   border-left: 0;
   border-top: 1.5px dotted currentColor;
 }
