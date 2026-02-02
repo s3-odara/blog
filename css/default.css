@@ -239,13 +239,19 @@ ul:has( a) {
     min-height: auto;
     font-size: 12pt;
   }
+  h1,
+  h2,
+  h3,
+  h4 {
+    break-after: avoid;
+  }
   pre,
   pre code {
     white-space: pre-wrap;
     word-break: break-word;
     overflow-wrap: anywhere;
+    break-inside: avoid;
   }
-}
 
 /* 色 */
 @media screen{
