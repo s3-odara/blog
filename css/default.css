@@ -116,6 +116,28 @@ article {
   }
 }
 
+nav#toc {
+  margin-block: 1.5rem 2rem;
+  font-size: 0.95rem;
+
+  & .toc-list,
+  & .toc-sub {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+
+  & .toc-sub {
+    padding-left: 1rem;
+    margin-top: 0.3rem;
+    border-left: 1px dotted currentColor;
+  }
+
+  & a {
+    text-decoration: none;
+  }
+}
+
 blockquote {
   margin-inline: clamp(0rem, 3vw, 2rem);
 
@@ -196,10 +218,10 @@ ul:has( a) {
 /* メディアクエリ */
 @media  (min-width: 95rem) {
   header > nav:has(a[href="../index.html"]) {
-    position: fixed;
-    top: var(--gutter);
-    left: var(--gutter);
-    width: var(--nav-rail-width);
+    position: absolute;
+    top: 3rem;
+    left: 1rem;
+    width: 13rem;
     max-width: 20vw;
     z-index: 10;
     border-bottom: 0;
@@ -222,8 +244,21 @@ ul:has( a) {
       width: 7rem;
       transform: translateX(20%);
       border-left: 0;
-      border-top: 1.5px dotted currentColor;
+      border-top: 2px dotted currentColor;
     }
+  }
+
+  nav#toc {
+    position: fixed;
+    top: var(--gutter);
+    right: var(--gutter);
+    width: clamp(12rem, 16vw, 18rem);
+    max-height: calc(100dvh - (var(--gutter) * 2));
+    overflow: auto;
+  }
+
+  article:has(#toc) {
+    padding-right: clamp(2rem, 16vw, 3rem);
   }
 }
 
