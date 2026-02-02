@@ -54,10 +54,16 @@ h1, h2, h3 {
 
 h2 {
   margin-block-start: 2rlh;
+  font-size: 1.375rem;
 }
 
 h3 {
   margin-block-start: 1.5rlh;
+  font-size: 1.125rem;
+}
+
+h4 {
+  font-weight: 600;
 }
 
 header {
@@ -243,17 +249,18 @@ ul:has( a) {
 /* 色 */
 @media screen{
   :root {
-    --color-bg: #e8eeed;
-    --color-text: #000;
-    --color-link: #014888;
-    --color-link-visited: #606;
+    --color-bg: oklch(0.9693 0.0122 166.85);
+    --color-text: oklch(0.3154 0.0407 166.85);
+    --color-link: oklch(0.3156 0.0972 253.04);
+    --color-link-under-line: oklch(0.4674 0.1234 253.04);
+    --color-link-visited: oklch(0.3156 0.1449 328.3634);
     --color-link-hover: #000;
-    --color-link-hover-bg: #aadbe8;
-    --color-quote-bg: #b7dcd5;
+    --color-link-hover-bg: oklch(0.8614 0.1386 151.92);
+    --color-quote-bg: oklch(0.8659 0.0188 166.85);
     --color-quote-border: #000;
-    --color-code-bg: #cae0d9;
-    --color-code-border: #389982;
-    --color-pre-bg: #f6f5f5;
+    --color-code-bg: oklch(0.8978 0.0188 166.85);
+    --color-code-border: oklch(0.6197 0.097 174.4);
+    --color-pre-bg: oklch(0.9693 0 0);
     --color-pre-border: #000;
   }
 
@@ -284,6 +291,17 @@ ul:has( a) {
   }
 
   a {
+    background-image: linear-gradient(
+      90deg,
+      var(--color-link-hover-bg),
+      var(--color-link-hover-bg)
+    );
+    background-size: 0% 100%;
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    transition: color 180ms ease, background-size 220ms ease;
+    text-decoration-thickness: .08rem;
+
     &:link {
       color: var(--color-link);
     }
@@ -294,7 +312,7 @@ ul:has( a) {
 
     &:focus, &:hover {
       color: var(--color-link-hover);
-      background-color: var(--color-link-hover-bg);
+      background-size: 100% 100%;
     }
   }
 
