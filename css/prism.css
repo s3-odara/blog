@@ -1,6 +1,8 @@
 /* PrismJS 1.29.0 CSS*/
 /*modified by s3-odara */
 
+@media not print {
+
 :root {
 	--prism-token-primary: oklch(0.4944 0.1976 15.85); /* red */
 	--prism-token-secondary: oklch(0.4903 0.1 90); /* yellow */
@@ -74,4 +76,5 @@
 		--prism-token-highlight: oklch(0.84 0.0966 232);
 		--prism-token-special: oklch(0.853 0.0896 304.16);
 	}
+}
 }
