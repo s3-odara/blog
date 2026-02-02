@@ -11,6 +11,9 @@
   --gutter: clamp(0.75rem, 1vw, 1.5rem);
   --wrapper-max-width: 70rem;
   --flow-space: 1em;
+  --sidebar-target-width: 20rem;
+  --sidebar-content-min-width: 50%;
+  --switcher-target-container-width: 40rem;
   --nav-rail-width: clamp(10rem, 12vw, 14rem);
 }
 
@@ -65,17 +68,7 @@ h4 {
 }
 
 header {
-  & > h1 {
-    margin-block: 0.67rem;
-    font-size: 2rem;
-  }
-
-  & > time {
-    font-size: 0.9rem;
-  }
-}
-
-body > header > nav {
+  & > nav {
     font-size: 1.1rem;
     font-family: serif;
     box-sizing: border-box;
@@ -102,6 +95,15 @@ body > header > nav {
       border-left: 1.5px dotted currentColor;
     }
   }
+
+  & > h1 {
+    margin-block: 0.67rem;
+    font-size: 2rem;
+  }
+
+  & > time {
+    font-size: 0.9rem;
+  }
 }
 
 article {
@@ -112,50 +114,6 @@ article {
   & > dl > dd:has(+ dt) {
     margin-bottom: 0.5rem;
   }
-}
-
-article > header {
-  --flow-space: 0.8em;
-}
-
-article > header > * + * {
-  margin-top: var(--flow-space, 1em);
-}
-
-article > header > nav#toc {
-  --flow-space: 0.4em;
-  font-size: 0.95rem;
-  padding-block: 0.8rem;
-  border-block: 1px solid currentColor;
-}
-
-article > header > nav#toc > * + * {
-  margin-top: var(--flow-space, 1em);
-}
-
-article > header > nav#toc ol {
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
-  display: grid;
-  gap: 0.35em;
-}
-
-article > header > nav#toc ol ol {
-  padding-left: 1.1rem;
-  gap: 0.25em;
-}
-
-article > header > nav#toc li {
-  position: relative;
-  padding-left: 1.1rem;
-}
-
-article > header > nav#toc li::before {
-  content: "•";
-  position: absolute;
-  left: 0;
-  top: 0;
 }
 
 blockquote {
@@ -237,7 +195,7 @@ ul:has( a) {
 
 /* メディアクエリ */
 @media  (min-width: 95rem) {
-  body > header > nav:has(a[href="../index.html"]) {
+  header > nav:has(a[href="../index.html"]) {
     position: fixed;
     top: var(--gutter);
     left: var(--gutter);
@@ -273,7 +231,7 @@ ul:has( a) {
   a {
     color:#000;
   }
-  body > header > nav {
+  header > nav {
     display: none;
   }
   body {
