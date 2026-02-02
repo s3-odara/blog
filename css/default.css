@@ -11,7 +11,7 @@
 html {
   font-size: max(
       1rem,
-      clamp( 20px, calc( 18px + 0.5vw ), 26px )
+      clamp( 20px, calc( 18.67px + 0.33vw ), 24px )
     );
 }
 
@@ -191,8 +191,9 @@ header > nav:has(a[href="../index.html"]) {
 header > nav:has(a[href="../index.html"]) a + a::before {
   top: calc(var(--nav-gap) / -2);
   bottom: auto;
-  left: 5%;
-  right: 5%;
+  left: 50%;
+  width: 2.4rem;
+  transform: translateX(-50%);
   border-left: 0;
   border-top: 1.5px dotted currentColor;
 }
