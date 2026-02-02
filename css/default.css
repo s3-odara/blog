@@ -49,23 +49,23 @@ header {
     place-content: center;
     place-self: start;
     margin-left: 0.5rem;
-  }
 
-  & > nav a {
-    position: relative;
-  }
+    &:has(a[href="../index.html"]) {
+      place-self: center;
+    }
 
-  & > nav a + a::before {
-    content: "";
-    position: absolute;
-    top: 5%;
-    bottom: 5%;
-    left: calc(var(--nav-gap) / -2);
-    border-left: 1.5px dotted currentColor;
-  }
+    & a {
+      position: relative;
+    }
 
-  & > nav:has(a[href="../index.html"]) {
-    place-self: center;
+    & a + a::before {
+      content: "";
+      position: absolute;
+      top: 5%;
+      bottom: 5%;
+      left: calc(var(--nav-gap) / -2);
+      border-left: 1.5px dotted currentColor;
+    }
   }
 
   & > h1 {
@@ -162,65 +162,69 @@ ul:has( a) {
 
 /* メディアクエリ */
 @media  (min-width: 40rem) {
-article {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
+  article {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }
 
 @media  (min-width: 70rem) {
-article {
-  max-width: 43rem;
-  margin-left: auto;
-  margin-right: auto;
+  article {
+    max-width: 43rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
-header > nav:has(a[href="../index.html"]) {
-  position: fixed;
-  top: 1rem;
-  left: 1rem;
-  width: 12rem;
-  max-width: 20vw;
-  z-index: 10;
-  border-bottom: 0;
-  grid-template-columns: 1fr;
-  justify-items: start;
-  place-content: start;
-  place-self: start;
-}
-
-header > nav:has(a[href="../index.html"])::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 30%;
-  bottom: 0;
-  border-bottom: 3px solid #555;
-}
-
-header > nav:has(a[href="../index.html"]) a + a::before {
-  top: calc(var(--nav-gap) / -2);
-  bottom: auto;
-  width: 7rem;
-  transform: translateX(20%);
-  border-left: 0;
-  border-top: 1.5px dotted currentColor;
-}
-
-body > header > h1, body > footer {
-  padding-left: 0.5rem;
-}
+@media  (min-width: 95rem) {
+  header > nav:has(a[href="../index.html"]) {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    width: 12rem;
+    max-width: 20vw;
+    z-index: 10;
+    border-bottom: 0;
+    grid-template-columns: 1fr;
+    justify-items: start;
+    place-content: start;
+    place-self: start;
+  
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 30%;
+      bottom: 0;
+      border-bottom: 3px solid #555;
+    }
+  
+    & a + a::before {
+      top: calc(var(--nav-gap) / -2);
+      bottom: auto;
+      width: 7rem;
+      transform: translateX(20%);
+      border-left: 0;
+      border-top: 1.5px dotted currentColor;
+    }
+  }
+  
+  body > header > h1, body > footer {
+    padding-left: 0.5rem;
+  }
 }
 
 @media (max-width: 35rem) {
-blockquote {
-  margin-left: 0rem;
-  margin-right: 0rem;
-}
+  blockquote {
+    margin-left: 0rem;
+    margin-right: 0rem;
+  }
 
-header > nav {
-  place-self: center;
-}
+  header {
+    & > nav {
+      place-self: center;
+    }
+  }
 }
 
 @media print {
@@ -231,74 +235,80 @@ a {
 
 /* 色 */
 @media screen{
-:root {
-  --color-bg: #e8eeed;
-  --color-text: #000;
-  --color-link: #014888;
-  --color-link-visited: #606;
-  --color-link-hover: #000;
-  --color-link-hover-bg: #aadbe8;
-  --color-quote-bg: #b7dcd5;
-  --color-quote-border: #000;
-  --color-code-bg: #cae0d9;
-  --color-code-border: #389982;
-  --color-pre-bg: #f6f5f5;
-  --color-pre-border: #000;
-}
-
-@media (prefers-color-scheme: dark) {
   :root {
-    --color-bg: #012824;
-    --color-text: #e6e6e6;
-    --color-link: #c2dbff;
-    --color-link-visited: #f5ccf7;
-    --color-link-hover: #fff;
-    --color-link-hover-bg: #3e7e6c;
-    --color-quote-bg: #2f645c;
-    --color-quote-border: #e6e6e6;
-    --color-code-bg: #1c534b;
-    --color-code-border: #e6e6e6;
-    --color-pre-bg: #202224;
-    --color-pre-border: #e6e6e6;
-  }
-}
-
-body {
-  background-color: var(--color-bg);
-  color: var(--color-text);
-}
-
-article {
-   color: var(--color-text);
-}
-
-a {
-  &:link {
-    color: var(--color-link);
+    --color-bg: #e8eeed;
+    --color-text: #000;
+    --color-link: #014888;
+    --color-link-visited: #606;
+    --color-link-hover: #000;
+    --color-link-hover-bg: #aadbe8;
+    --color-quote-bg: #b7dcd5;
+    --color-quote-border: #000;
+    --color-code-bg: #cae0d9;
+    --color-code-border: #389982;
+    --color-pre-bg: #f6f5f5;
+    --color-pre-border: #000;
   }
 
-  &:visited {
-    color: var(--color-link-visited);
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-bg: #012824;
+      --color-text: #e6e6e6;
+      --color-link: #c2dbff;
+      --color-link-visited: #f5ccf7;
+      --color-link-hover: #fff;
+      --color-link-hover-bg: #3e7e6c;
+      --color-quote-bg: #2f645c;
+      --color-quote-border: #e6e6e6;
+      --color-code-bg: #1c534b;
+      --color-code-border: #e6e6e6;
+      --color-pre-bg: #202224;
+      --color-pre-border: #e6e6e6;
+    }
   }
 
-  &:focus, &:hover {
-    color: var(--color-link-hover);
-    background-color: var(--color-link-hover-bg);
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
   }
-}
 
-blockquote div {
-  color: var(--color-text);
-  border-color: var(--color-quote-border);
-  background: var(--color-quote-bg);
-}
-code {
-  color: var(--color-text);
-  background-color: var(--color-code-bg);
-}
-pre code {
-  border-color: var(--color-pre-border);
-  color: var(--color-text);
-  background-color: var(--color-pre-bg);
-}
+  article {
+    color: var(--color-text);
+  }
+
+  a {
+    &:link {
+      color: var(--color-link);
+    }
+
+    &:visited {
+      color: var(--color-link-visited);
+    }
+
+    &:focus, &:hover {
+      color: var(--color-link-hover);
+      background-color: var(--color-link-hover-bg);
+    }
+  }
+
+  blockquote {
+    & div {
+      color: var(--color-text);
+      border-color: var(--color-quote-border);
+      background: var(--color-quote-bg);
+    }
+  }
+
+  code {
+    color: var(--color-text);
+    background-color: var(--color-code-bg);
+  }
+
+  pre {
+    & code {
+      border-color: var(--color-pre-border);
+      color: var(--color-text);
+      background-color: var(--color-pre-bg);
+    }
+  }
 }
