@@ -48,7 +48,7 @@ body {
   padding-inline: var(--gutter);
 }
 
-h1, h2, h3 {
+h1, h2, h3, nav {
   text-wrap: balance;
   font-feature-settings: "palt" 1;
 }
@@ -77,7 +77,7 @@ header {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    --nav-gap: 2.5rem;
+    --nav-gap: clamp(0.8rem, 6vw, 2.5rem);
     gap: var(--nav-gap);
     align-items: center;
     justify-content: center;
@@ -119,6 +119,7 @@ article {
 nav#toc {
   margin-block: 1.5rem 2rem;
   font-size: 0.95rem;
+  line-height: 1.7rem;
 
   & .toc-list,
   & .toc-sub {
