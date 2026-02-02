@@ -266,18 +266,19 @@ ul:has( a) {
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --color-bg: #012824;
-      --color-text: #e6e6e6;
-      --color-link: #c2dbff;
-      --color-link-visited: #f5ccf7;
-      --color-link-hover: #fff;
-      --color-link-hover-bg: #3e7e6c;
-      --color-quote-bg: #2f645c;
-      --color-quote-border: #e6e6e6;
-      --color-code-bg: #1c534b;
-      --color-code-border: #e6e6e6;
-      --color-pre-bg: #202224;
-      --color-pre-border: #e6e6e6;
+      --color-bg: oklch(0.0307 0.0122 166.85);
+      --color-text: oklch(0.6846 0.0407 166.85);
+      --color-link: oklch(0.6844 0.0972 253.04);
+      --color-link-under-line: oklch(0.5326 0.1234 253.04);
+      --color-link-visited: oklch(0.6844 0.1449 328.3634);
+      --color-link-hover: oklch(1 0 0);
+      --color-link-hover-bg: oklch(0.1386 0.1386 151.92);
+      --color-quote-bg: oklch(0.1341 0.0188 166.85);
+      --color-quote-border: oklch(1 0 0);
+      --color-code-bg: oklch(0.1022 0.0188 166.85);
+      --color-code-border: oklch(0.3803 0.097 174.4);
+      --color-pre-bg: oklch(0.0307 0 0);
+      --color-pre-border: oklch(1 0 0);
     }
   }
 
