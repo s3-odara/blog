@@ -20,14 +20,13 @@
 html {
   font-size: max(
       1rem,
-      clamp( 1.25rem, calc( 1.17rem + 0.33vw ), 1.5rem )
-      /* clamp( 1.125rem, calc( 1rem + 0.5vw ), 1.5rem ) */
+      clamp( 20px, calc( 18.67px + 0.33vw ), 24px )
+      /* clamp( 18px, calc( 16px + 0.5vw ), 24px ) */
     );
 }
 
 body {
   display: grid;
-  grid-auto-columns: 100%;
   grid-template-rows: auto 1fr auto;
   min-height: 100dvh;
   font-size: 1rem;
@@ -222,9 +221,22 @@ ul:has( a) {
 }
 
 @media print {
-a {
-  color:#000;
-}
+  a {
+    color:#000;
+  }
+  header > nav {
+    display: none;
+  }
+  body {
+    display: block;
+    min-height: auto;
+  }
+  pre,
+  pre code {
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
 }
 
 /* 色 */
