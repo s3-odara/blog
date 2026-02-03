@@ -10,11 +10,6 @@
   /* レイアウトプリミティブ用 */
   --gutter: clamp(0.75rem, 1vw, 1.5rem);
   --wrapper-max-width: 70rem;
-  --flow-space: 1em;
-  --sidebar-target-width: 20rem;
-  --sidebar-content-min-width: 50%;
-  --switcher-target-container-width: 40rem;
-  --nav-rail-width: clamp(10rem, 12vw, 14rem);
 }
 
 html {
@@ -140,13 +135,13 @@ nav#toc {
 }
 
 blockquote {
-  margin-inline: clamp(0rem, 3vw, 2rem);
+  margin: 0;
+  margin-block-start: 1rlh;
+  margin-block-end: 1rlh;
 
   & div {
     padding: 1rem;
     border-radius: 0.6rem;
-    border-style: solid;
-    border-width: thin;
   }
 
   & :first-child {
@@ -170,8 +165,6 @@ code {
   border-radius: 0.3rem;
   padding: 0.1rem 0.2rem;
   margin: 0 0.1rem;
-  border-style: solid;
-  border-width: thin;
 }
 
 pre {
@@ -293,19 +286,20 @@ ul:has( a) {
 /* 色 */
 @media screen{
   :root {
-    --color-bg: oklch(0.9693 0.0122 166.85);
+    --color-bg: oklch(0.998 0.0032 166.85);
     --color-text: oklch(0.3154 0.0407 166.85);
     --color-link: oklch(0.3156 0.0972 253.04);
     --color-link-visited: oklch(0.3156 0.1449 328.3634);
-    --color-link-hover: #000;
-    --color-link-hover-bg: oklch(0.8614 0.1386 151.92);
-    --color-quote-bg: oklch(0.8659 0.0188 166.85);
-    --color-quote-border: #000;
+    --color-link-hover: oklch(0.154 0.0314 166.85);
+    --color-link-hover-bg: oklch(0.8781 0.1356 166.85);
+    --color-quote-bg: oklch(0.9559 0.00728 166.85);
+    --color-quote-border: oklch(0.217 0.0057 174.4);
     --color-code-text: oklch(0.3154 0.0407 166.85);
-    --color-code-bg: oklch(0.8978 0.0188 166.85);
+    --color-code-bg: oklch(0.9478 0.00838 166.85);
     --color-code-border: oklch(0.6197 0.097 174.4);
-    --color-pre-bg: oklch(0.9693 0 0);
-    --color-pre-border: #000;
+    --color-pre-text: oklch(0.3154 0.0107 166.85);
+    --color-pre-bg: oklch(0.973 0 0);
+    --color-pre-border: oklch(0.217 0.0057 174.4);
   }
 
   @media (prefers-color-scheme: dark) {
@@ -321,6 +315,7 @@ ul:has( a) {
       --color-code-text: oklch(0.9146 0.0407 166.85);
       --color-code-bg: oklch(0.2628 0.0539 166.85);
       --color-code-border: oklch(0.3803 0.097 174.4);
+      --color-pre-text: oklch(0.9146 0.0407 166.85);
       --color-pre-bg: oklch(0.1594 0 0);
       --color-pre-border: oklch(0.95 0 0);
     }
@@ -344,7 +339,7 @@ ul:has( a) {
     background-size: 0% 100%;
     background-repeat: no-repeat;
     background-position: left bottom;
-    transition: color 180ms ease, background-size 220ms ease;
+    transition: color 180ms ease, background-size 220ms cubic-bezier(.08,.82,.17,1);
     text-decoration-thickness: .08rem;
 
     &:link {
@@ -378,7 +373,7 @@ ul:has( a) {
   pre {
     & code {
       border-color: var(--color-pre-border);
-      color: var(--color-text);
+      color: var(--color-pre-text);
       background-color: var(--color-pre-bg);
     }
   }
