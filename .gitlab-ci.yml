@@ -7,7 +7,7 @@ deploy:
     - |
       set -euo pipefail
       apk add --no-cache rsync
-      npm i -g wrangler
+      npm i wrangler
       npm audit signatures
 
       # dist 作成 + _headers
@@ -32,10 +32,10 @@ deploy:
       EOF
 
       # デプロイ（workers.dev の場合）
-      wrangler deploy
+      npx wrangler deploy
 
       # 独自ドメインを使う場合は以下に切り替え:
-      # wrangler deploy --env prod
+      # npx wrangler deploy --env prod
   only:
     - master
 
