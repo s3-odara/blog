@@ -1,11 +1,14 @@
 deploy:
   stage: deploy
   image: node:current-alpine
+  environment:
+    name: cloudflare-workers
   script:
     - |
       set -euo pipefail
       apk add --no-cache rsync
       npm i -g wrangler
+      npm audit signatures
 
       # dist 作成 + _headers
       rm -rf dist
