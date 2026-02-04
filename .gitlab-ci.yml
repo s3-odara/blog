@@ -17,12 +17,14 @@ deploy:
       rsync -a --delete \
         --exclude '.git*' \
         --exclude 'dist' \
+        --exclude 'node_modules' \
         --exclude 'src' \
         --exclude 'AGENTS.md' \
         --exclude 'maketoc' \
         --exclude 'README.md' \
         --exclude 'wrangler.toml' \
         --exclude '.gitlab-ci.yml' \
+        --exclude 'package.json' \
         --exclude 'package-lock.json' \
         ./ dist/
 
