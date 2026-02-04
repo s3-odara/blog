@@ -6,7 +6,7 @@ deploy:
   script:
     - |
       set -euo pipefail
-      apk add --no-cache rsync
+      apk add --no-cache rsync git curl
       npm i wrangler
       npm audit signatures
 
@@ -38,6 +38,55 @@ deploy:
 
       # 独自ドメインを使う場合は以下に切り替え:
       # npx wrangler deploy --env prod
+
+      # 変更されたファイルの URL を Cloudflare キャッシュからパージ
+      # 必要な変数: CLOUDFLARE_ZONE_ID, CLOUDFLARE_API_TOKEN
+      CLOUDFLARE_HOSTNAME="https://www.s3-odara.net"
+      BEFORE_SHA="${CI_COMMIT_BEFORE_SHA:-}"
+      AFTER_SHA="${CI_COMMIT_SHA:-HEAD}"
+      if [ -z "$BEFORE_SHA" ] || [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ]; then
+        echo "BEFORE_SHA is empty/zero. Skip cache purge."
+        exit 0
+      fi
+      # shallow clone で BEFORE_SHA が無い場合は追加取得
+      if ! git cat-file -e "$BEFORE_SHA^{commit}" 2>/dev/null; then
+        git fetch --depth=200 origin "$BEFORE_SHA"
+      fi
+      CHANGED_FILES="$(git diff --name-only "$BEFORE_SHA" "$AFTER_SHA")"
+
+      # デプロイ対象から除外したいパスはここでフィルタ
+      TMP_LIST="$(mktemp)"
+      COUNT=0
+      while IFS= read -r f; do
+        [ -z "$f" ] && continue
+        case "$f" in
+          .git*|dist/*|node_modules/*|src/*|AGENTS.md|maketoc|README.md|wrangler.toml|.gitlab-ci.yml|package.json|package-lock.json) continue ;;
+        esac
+        printf '%s\n' "$f" >> "$TMP_LIST"
+        COUNT=$((COUNT+1))
+        if [ "$COUNT" -ge 100 ]; then
+          JSON="$(node -e 'const fs=require("fs");const files=fs.readFileSync(process.argv[1],"utf8").trim().split(/\n/).filter(Boolean).map(p=>`'"$CLOUDFLARE_HOSTNAME"'/${p.replace(/^\\//,"")}`);console.log(JSON.stringify({files}));' "$TMP_LIST")"
+          curl -sS -X POST "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            -H "Content-Type: application/json" \
+            --data "$JSON"
+          : > "$TMP_LIST"
+          COUNT=0
+        fi
+      done <<EOF
+      $CHANGED_FILES
+      EOF
+
+      if ! [ -s "$TMP_LIST" ]; then
+        echo "No files to purge."
+      else
+        JSON="$(node -e 'const fs=require("fs");const files=fs.readFileSync(process.argv[1],"utf8").trim().split(/\n/).filter(Boolean).map(p=>`'"$CLOUDFLARE_HOSTNAME"'/${p.replace(/^\\//,"")}`);console.log(JSON.stringify({files}));' "$TMP_LIST")"
+        curl -sS -X POST "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
+          -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+          -H "Content-Type: application/json" \
+          --data "$JSON"
+      fi
+      rm -f "$TMP_LIST"
   only:
     - master
 
