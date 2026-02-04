@@ -2,15 +2,15 @@ name = "blog"
 main = "src/worker.ts"
 compatibility_date = "2026-02-04"
 
-# デフォルトは workers.dev に出す
-workers_dev = true
+# workers.dev domain name
+workers_dev = false
 
 [assets]
 binding = "ASSETS"
 directory = "./dist"
 html_handling = "none"
 
-# 独自ドメイン用の設定
+# custom domain name (require permission to cf api key)
 [env.prod]
 workers_dev = false
 routes = ["example.com/*"]
@@ -18,4 +18,4 @@ routes = ["example.com/*"]
 [env.prod.assets]
 binding = "ASSETS"
 directory = "./dist"
-html_handling = "auto-trailing-slash"
+html_handling = "no"
