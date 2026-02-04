@@ -1,0 +1,21 @@
+name = "blog"
+main = "src/worker.ts"
+compatibility_date = "2026-02-04"
+
+# デフォルトは workers.dev に出す
+workers_dev = true
+
+[assets]
+binding = "ASSETS"
+directory = "./dist"
+html_handling = "auto-trailing-slash"
+
+# 独自ドメイン用の設定
+[env.prod]
+workers_dev = false
+routes = ["example.com/*"]
+
+[env.prod.assets]
+binding = "ASSETS"
+directory = "./dist"
+html_handling = "auto-trailing-slash"
