@@ -4,12 +4,11 @@ deploy:
   script:
     - |
       set -euo pipefail
-      apk add --no-cache brotli rsync findutils
+      apk add --no-cache rsync
       npm i -g wrangler
 
-      # dist 作成 + brotli 同名置換 + _headers
-      BROTLI_REGEX='.*\.(htm|html|txt|text|asc|js|mjs|css|json|xml|svg|map|webmanifest)$'
-      rm -rf dist brotli_file_list.txt
+      # dist 作成 + _headers
+      rm -rf dist
       mkdir -p dist
 
       rsync -a --delete \
@@ -24,26 +23,10 @@ deploy:
         --exclude 'package-lock.json' \
         ./ dist/
 
-      find dist -type f -regextype posix-extended -iregex "${BROTLI_REGEX}" -printf '%P\n' \
-        | LC_ALL=C sort > brotli_file_list.txt
-
-      while IFS= read -r rel; do
-        [ -z "$rel" ] && continue
-        src="dist/$rel"
-        tmp="dist/$rel.br.tmp"
-        brotli -f -q 11 -o "$tmp" "$src"
-        mv -f "$tmp" "$src"
-      done < brotli_file_list.txt
-
       cat > dist/_headers <<'EOF'
       /*
-        Cache-Control: public, max-age=180, stale-while-revalidate=86400, no-transform
+        Cache-Control: public, max-age=180, stale-while-revalidate=86400
       EOF
-
-      while IFS= read -r rel; do
-        [ -z "$rel" ] && continue
-        printf "/%s\n  Content-Encoding: br\n  Vary: Accept-Encoding\n" "$rel" >> dist/_headers
-      done < brotli_file_list.txt
 
       # デプロイ（workers.dev の場合）
       wrangler deploy
@@ -59,13 +42,10 @@ pages:
   script:
     - apk update
     - apk upgrade
-    - apk add brotli
     - mkdir .public
     - cp -r * .public
     - cp -r .well-known .public
     - mv .public public
-    - find public -type f -regex '.*\.\(htm\|html\|txt\|text\|js\|css\)$' -exec gzip -f -k {} \;
-    - find public -type f -regex '.*\.\(htm\|html\|txt\|text\|js\|css\)$' -exec brotli -f -k {} \;
   artifacts:
     paths:
       - public
