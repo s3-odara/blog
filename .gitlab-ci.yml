@@ -1,6 +1,6 @@
 deploy:
   stage: deploy
-  image: node:20-alpine
+  image: node:current-alpine
   script:
     - |
       set -euo pipefail
