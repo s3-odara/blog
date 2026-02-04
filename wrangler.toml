@@ -8,7 +8,7 @@ workers_dev = true
 [assets]
 binding = "ASSETS"
 directory = "./dist"
-html_handling = "auto-trailing-slash"
+html_handling = "none"
 
 # 独自ドメイン用の設定
 [env.prod]
