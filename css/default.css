@@ -45,7 +45,7 @@ body {
 }
 
 h1, h2, h3, nav {
-  text-wrap: balance;
+  text-wrap: pretty;
   font-feature-settings: "palt" 1;
 }
 
@@ -110,6 +110,9 @@ article {
   & > dl > dd:has(+ dt) {
     margin-bottom: 0.5rem;
   }
+  & p + p {
+    margin-block-start: 0.75rlh;
+  }
 }
 
 nav#toc {
@@ -133,6 +136,10 @@ nav#toc {
 
   & a {
     text-decoration: none;
+  }
+
+  &  li {
+    padding-block-end: 0.2rlh;
   }
 }
 
@@ -165,7 +172,7 @@ blockquote {
 
 code {
   border-radius: 0.3rem;
-  padding: 0.1rem 0.2rem;
+  padding: 0.1rem 0.3rem;
   margin: 0 0.1rem;
 }
 
