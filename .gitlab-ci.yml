@@ -42,10 +42,14 @@ pages:
   script:
     - apk update
     - apk upgrade
+    - apk add brotli
     - mkdir .public
     - cp -r * .public
     - cp -r .well-known .public
     - mv .public public
+    - find public -type f -regex '.*\.\(htm\|html\|txt\|text\|js\|css\|asc\)$' -exec gzip -f -k {} \; 
+    - find public -type f -regex '.*\.\(htm\|html\|txt\|text\|js\|css\|asc\)$' -exec brotli -f -k {} \;
+
   artifacts:
     paths:
       - public
