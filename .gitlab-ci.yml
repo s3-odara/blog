@@ -29,7 +29,10 @@ deploy:
 
       while IFS= read -r rel; do
         [ -z "$rel" ] && continue
-        brotli -f -q 11 -o "dist/$rel" "dist/$rel"
+        src="dist/$rel"
+        tmp="dist/$rel.br.tmp"
+        brotli -f -q 11 -o "$tmp" "$src"
+        mv -f "$tmp" "$src"
       done < brotli_file_list.txt
 
       cat > dist/_headers <<'EOF'
