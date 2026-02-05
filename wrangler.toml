@@ -1,5 +1,5 @@
 name = "blog"
-main = "src/worker.ts"
+main = "scripts/worker.ts"
 compatibility_date = "2026-02-04"
 
 # workers.dev domain name
