@@ -6,7 +6,7 @@ deploy:
   script:
     - |
       set -euo pipefail
-      apk add --no-cache rsync git curl
+      apk add --no-cache git curl jq
       npm i wrangler
       npm audit signatures
 
@@ -14,19 +14,8 @@ deploy:
       rm -rf dist
       mkdir -p dist
 
-      rsync -a --delete \
-        --exclude '.git*' \
-        --exclude 'dist' \
-        --exclude 'node_modules' \
-        --exclude 'src' \
-        --exclude 'AGENTS.md' \
-        --exclude 'maketoc' \
-        --exclude 'README.md' \
-        --exclude 'wrangler.toml' \
-        --exclude '.gitlab-ci.yml' \
-        --exclude 'package.json' \
-        --exclude 'package-lock.json' \
-        ./ dist/
+      # 追跡ファイルだけを展開（除外は .gitattributes の export-ignore で制御）
+      git archive --format=tar HEAD | tar -x -C dist
 
       cat > dist/_headers <<'EOF'
       /*
@@ -52,41 +41,34 @@ deploy:
       if ! git cat-file -e "$BEFORE_SHA^{commit}" 2>/dev/null; then
         git fetch --depth=200 origin "$BEFORE_SHA"
       fi
-      CHANGED_FILES="$(git diff --name-only "$BEFORE_SHA" "$AFTER_SHA")"
+      # export-ignore に寄せてフィルタ
+      HOST="${CLOUDFLARE_HOSTNAME%/}"
+      git diff --name-only -z "$BEFORE_SHA" "$AFTER_SHA" -- . \
+      | git check-attr -z --stdin --source "$AFTER_SHA" export-ignore \
+      | awk -v RS='\0' '
+          NR%3==1 {path=$0}
+          NR%3==0 { if ($0 != "set") { printf "%s%c", path, 0 } }
+        ' \
+      | xargs -0 -r -n 100 sh -ceu '
+          host="$1"; zone="$2"; token="$3"; shift 3
 
-      # デプロイ対象から除外したいパスはここでフィルタ
-      TMP_LIST="$(mktemp)"
-      COUNT=0
-      while IFS= read -r f; do
-        [ -z "$f" ] && continue
-        case "$f" in
-          .git*|dist/*|node_modules/*|src/*|AGENTS.md|maketoc|README.md|wrangler.toml|.gitlab-ci.yml|package.json|package-lock.json) continue ;;
-        esac
-        printf '%s\n' "$f" >> "$TMP_LIST"
-        COUNT=$((COUNT+1))
-        if [ "$COUNT" -ge 100 ]; then
-          JSON="$(node -e 'const fs=require("fs");const files=fs.readFileSync(process.argv[1],"utf8").trim().split(/\n/).filter(Boolean).map(p=>`'"$CLOUDFLARE_HOSTNAME"'/${p.replace(/^\\//,"")}`);console.log(JSON.stringify({files}));' "$TMP_LIST")"
-          curl -sS -X POST "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
-            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
-            -H "Content-Type: application/json" \
-            --data "$JSON"
-          : > "$TMP_LIST"
-          COUNT=0
-        fi
-      done <<EOF
-      $CHANGED_FILES
-      EOF
+          json="$(
+            jq -n --arg host "$host" --args "$@" '"'"'
+              def encpath:
+                ltrimstr("/") | split("/") | map(@uri) | join("/");
+              { files: $ARGS.positional | map($host + "/" + (. | encpath)) }
+            '"'"'
+          )"
 
-      if ! [ -s "$TMP_LIST" ]; then
-        echo "No files to purge."
-      else
-        JSON="$(node -e 'const fs=require("fs");const files=fs.readFileSync(process.argv[1],"utf8").trim().split(/\n/).filter(Boolean).map(p=>`'"$CLOUDFLARE_HOSTNAME"'/${p.replace(/^\\//,"")}`);console.log(JSON.stringify({files}));' "$TMP_LIST")"
-        curl -sS -X POST "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
-          -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
-          -H "Content-Type: application/json" \
-          --data "$JSON"
-      fi
-      rm -f "$TMP_LIST"
+          resp="$(
+            curl -sS -X POST "https://api.cloudflare.com/client/v4/zones/${zone}/purge_cache" \
+              -H "Authorization: Bearer ${token}" \
+              -H "Content-Type: application/json" \
+              --data "$json"
+          )"
+
+          echo "$resp" | jq -e ".success == true" >/dev/null || { echo "$resp" >&2; exit 1; }
+        ' sh "$HOST" "$CLOUDFLARE_ZONE_ID" "$CLOUDFLARE_API_TOKEN"
   only:
     - master
 
