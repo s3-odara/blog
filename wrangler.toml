@@ -9,6 +9,7 @@ workers_dev = false
 binding = "ASSETS"
 directory = "./dist"
 html_handling = "none"
+not_found_handling = "404-page"
 
 # custom domain name (require permission to cf api key)
 [env.prod]
