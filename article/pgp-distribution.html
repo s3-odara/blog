@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>PGP鍵の配布と検証方法の考察 | s3-odaraのブログ</title>
-<meta name="description" content="PGP鍵をDANEやCERTレコード、Web Key Directoryなどで配布する方法とそれぞれの長所、短所">
-<meta name="viewport" content="initial-scale=1">
-<link rel="canonical" href="https://www.s3-odara.net/article/pgp-distribution.html">
-<link rel="stylesheet" type="text/css" href="../css/default.css">
-<script defer src="../js/tools.js"></script>
-<link rel="stylesheet" type="text/css" href="../css/prism.css">
+<meta name="description" content="PGP鍵をDANEやCERTレコード、Web Key Directoryなどで配布する方法とそれぞれの長所、短所" />
+<meta name="viewport" content="initial-scale=1" />
+<link rel="canonical" href="https://www.s3-odara.net/article/pgp-distribution.html" />
+<link rel="stylesheet" type="text/css" href="../css/default.css" />
+<script defer="defer" src="../js/tools.js"></script>
+<link rel="stylesheet" type="text/css" href="../css/prism.css" />
 </head>
 
 <body>
@@ -91,7 +91,7 @@ DNSで配布する方法
 <p>
 PGP公開鍵サーバーは基本的に鍵の検証機能を持たない。webサーバーからhttpsを使って配布してもCAの信頼性に依存することになる。
 それならDNSを信用しようということでドメイン名の所有権とDNSに頼る派閥が存在する。TLSのDANEなどと同じ考えだ。
-<p>
+</p>
 
 <p>
 DNSには様々な方法で偽の応答をキャッシュさせる攻撃が知られている。
@@ -118,7 +118,7 @@ PGP CERTレコード
 <p>
 メールアドレスがfuga@hoge.exampleだとすると、<code>fuga.hoge.example. IN CERT 3 0 15 &lt;base64 encoded binary of pubkey&gt;</code>
 このような形式でDNSに公開鍵を保存することになる。
-<p>
+</p>
 
 <p>
 ユーザー名以外に公開鍵IDから検索できるようにする方法も提案されており、次のようなDNSレコードを公開することで公開鍵指紋とドメイン名が分かっている場合に検索できるようにすることができる。
@@ -222,7 +222,7 @@ PGP公開鍵サーバー
 </h3>
 
 <p>HPKPで鍵の同期と配布を行う、昔からある鍵サーバー。<a href="https://zenn.dev/zunda/scraps/6ea8f38619cee4">基本的に鍵の削除はできず</a>、誰かの鍵に各々勝手に署名を付して、信頼の輪による検証をサポートする。
-<a href="https://web.archive.org/web/20220119094712/https://www.sks-keyservers.net/">鍵サーバー同士で同期している</a>ことが多かったので、一つの鍵サーバーにアップロードしておけば十分だった。<p>
+<a href="https://web.archive.org/web/20220119094712/https://www.sks-keyservers.net/">鍵サーバー同士で同期している</a>ことが多かったので、一つの鍵サーバーにアップロードしておけば十分だった。</p>
 
 <p>しかし、GDPRの要求や、署名を大量に付けるスパムの発生が問題になって運用を取りやめる鍵サーバーも増えた他、
 信頼の輪モデルはうまく普及せず、結果的に真正性の担保のない公開鍵サーバーからダウンロードした鍵を元に場当たり的に「最初に使った鍵を信じる」ポリシーで運用している人が多かったと考えられる。信頼する人間の署名がない鍵を絶対に使わない方針でストイックに信頼の輪モデルを実行していた人がいたら教えてほしい。</p>
@@ -271,12 +271,12 @@ https://hoge.example/.well-known/openpgpkey/hu/&lt;encoded_localpart&gt;</code><
 
 <h2 id='conclusion'>まとめ</h2>
 
-<p>基本は<a href=https://keys.openpgp.org/>keys.openpgp.org</a>か<a href=https://keys.mailvelope.com/>keys.mailvelope.com</a>。メールアドレスのドメインパートが自分の制御下ならWKD、DNSSECが好きならDANE for OPENPGPを使おう。</p>
+<p>基本は<a href='https://keys.openpgp.org/'>keys.openpgp.org</a>か<a href='https://keys.mailvelope.com/'>keys.mailvelope.com</a>。メールアドレスのドメインパートが自分の制御下ならWKD、DNSSECが好きならDANE for OPENPGPを使おう。</p>
 
 </article>
 
 <footer>
-<a href="../index.html">s3-odaraのサイト</a> by <a rel="author" href="../about.html">小原晴太</a> is Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a><br>
+<a href="../index.html">s3-odaraのサイト</a> by <a rel="author" href="../about.html">小原晴太</a> is Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a><br />
 <div class="center"> <a href="../index.html">home</a> </div>
 </footer>
 </body>

@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>
 PGP副鍵をYubikeyに入れた | s3-odaraのブログ
 </title>
-<meta name="description" content="PGP鍵をYubikeyに書き込む方法、sshでYubikey上のPGP鍵を使う方法、ThunderbirdでYubikey上のPGP鍵を使う方法の説明。">
-<meta name="viewport" content="initial-scale=1">
-<link rel="canonical" href="https://www.s3-odara.net/article/pgpkey-yubikey.html">
-<link rel="stylesheet" type="text/css" href="../css/default.css">
-<link rel="stylesheet" type="text/css" href="../css/prism.css">
-<script defer src="../js/bash_shell_diff.js"></script>
+<meta name="description" content="PGP鍵をYubikeyに書き込む方法、sshでYubikey上のPGP鍵を使う方法、ThunderbirdでYubikey上のPGP鍵を使う方法の説明。" />
+<meta name="viewport" content="initial-scale=1" />
+<link rel="canonical" href="https://www.s3-odara.net/article/pgpkey-yubikey.html" />
+<link rel="stylesheet" type="text/css" href="../css/default.css" />
+<link rel="stylesheet" type="text/css" href="../css/prism.css" />
+<script defer='defer' src="../js/bash_shell_diff.js"></script>
 </head>
 
 <body>
@@ -20,7 +20,7 @@ PGP副鍵をYubikeyに入れた | s3-odaraのブログ
 <a href="../index.html">home</a>
 
 <p>
-mirror: <a rel="alternate" href="https://www.odarah.org/">https://www.odarah.org/</a><br>
+mirror: <a rel="alternate" href="https://www.odarah.org/">https://www.odarah.org/</a><br />
 about: <a rel="author" href="../about.html">https://s3-odara.net/about</a>
 </p>
 </nav>
@@ -251,10 +251,8 @@ yubikeyをsshに使う方法は現在3種類あり、これらには長短があ
 </dl>
 
 <p>
-
-<p>
 少なくともYubikeyの中では全く別の機能として保管されるので、3つとも競合はしないはずだから複数用意してもいい。ここでは2番目の方法を行う。まず、OpenPGP Cardをsshで使えるようにするためにgpg-agentをssh-agentとして使用するための環境変数を設定する。
-<p>
+</p>
 
 <pre>
 <code class="no-highlight">~/.config/environment.d/gpg_agent.conf
@@ -307,7 +305,7 @@ ThunderbirdにOpenPGPサポートが組み込まれたためにEgnimailはサポ
 </article>
 
 <footer>
-<a href="../index.html">s3-odaraのサイト</a> (C) 2023 by <a rel="author" href="../about.html">小原晴太</a> is Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a><br>
+<a href="../index.html">s3-odaraのサイト</a> (C) 2023 by <a rel="author" href="../about.html">小原晴太</a> is Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a><br />
 <div class="center"> <a href="../index.html">home</a> </div>
 </footer>
 </body>
