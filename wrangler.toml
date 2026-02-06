@@ -1,0 +1,22 @@
+name = "blog"
+main = "scripts/worker.ts"
+compatibility_date = "2026-02-04"
+
+# workers.dev domain name
+workers_dev = false
+
+[assets]
+binding = "ASSETS"
+directory = "./dist"
+html_handling = "none"
+not_found_handling = "404-page"
+
+# custom domain name (require permission to cf api key)
+[env.prod]
+workers_dev = false
+routes = ["example.com/*"]
+
+[env.prod.assets]
+binding = "ASSETS"
+directory = "./dist"
+html_handling = "no"

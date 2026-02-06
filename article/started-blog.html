@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>
 ブログ始めてみた | s3-odaraのブログ
 </title>
-<meta name="description" content="ブログを始めた理由とブログの中身">
-<meta name="viewport" content="initial-scale=1">
-<link rel="canonical" href="https://www.s3-odara.net/article/started-blog.html">
-<link rel="stylesheet" type="text/css" href="../css/default.css">
-<link rel="stylesheet" type="text/css" href="../css/prism.css">
-<script defer src="../js/markup_xml_json_json5_toml_yaml.js"></script>
+<meta name="description" content="ブログを始めた理由とブログの中身" />
+<meta name="viewport" content="initial-scale=1" />
+<link rel="canonical" href="https://www.s3-odara.net/article/started-blog.html" />
+<link rel="stylesheet" type="text/css" href="../css/default.css" />
+<link rel="stylesheet" type="text/css" href="../css/prism.css" />
+<script defer="defer" src="../js/markup_xml_json_json5_toml_yaml.js"></script>
 </head>
 
 <body>
@@ -20,7 +20,7 @@
 <a href="../index.html">home</a>
 
 <p>
-mirror: <a rel="alternate" href="https://www.odarah.org/">https://www.odarah.org/</a><br>
+mirror: <a rel="alternate" href="https://www.odarah.org/">https://www.odarah.org/</a><br />
 about: <a rel="auther" href="../about.html">https://s3-odara.net/about</a>
 </p>
 </nav>
@@ -93,13 +93,13 @@ Cloudflareの設定
 あとはCloudflareのキャッシュ設定。デフォルトでは<a href="https://developers.cloudflare.com/cache/concepts/default-cache-behavior/#default-cached-file-extensions">htmlファイルはエッジにキャッシュされない</a>のでRules > Page Rulesで<code>www.s3-odara.net/*</code>に対して全てキャッシュするルールを設定。
 </p>
 
-<img src="../img/cloudflare-all-cache.avif" alt="www.s3-odara.netの全ての要素をキャッシュ" width="1280" height="522" loading="lazy">
+<img src="../img/cloudflare-all-cache.avif" alt="www.s3-odara.netの全ての要素をキャッシュ" width="1280" height="522" loading="lazy"/>
 
 <p>
 さらにCacheing > Cache RulesでCDNの終端にキャッシュされる時間の最大値とブラウザに要求するキャッシュの最大時間を設定。
 </p>
 
-<img src="../img/cloudflare-cache-settings.avif" alt="全ての着信接続のエッジキャッシュTTLを4時間に設定" width="975" height="792" loading="lazy">
+<img src="../img/cloudflare-cache-settings.avif" alt="全ての着信接続のエッジキャッシュTTLを4時間に設定" width="975" height="792" loading="lazy" />
 
 <h3 id="圧縮">
 圧縮
@@ -107,7 +107,7 @@ Cloudflareの設定
 
 <p>
 Cloudflareはbrotli圧縮をサポートしているが、特定の状況でオリジンからのリクエストを一旦展開する必要が有るらしい。遅延が大きくなりそうなのでこれらの機能を無効化した。
-</P>
+</p>
 
 <blockquote cite="https://developers.cloudflare.com/speed/optimization/content/brotli/enable/#notes-about-end-to-end-compression">
 <div>
@@ -194,7 +194,7 @@ Disallow: /.gitlab-ci.yml</code></pre>
 </article>
 
 <footer>
-<a href="../index.html">s3-odaraのサイト</a> (C) 2023 by <a rel="auther" href="../about.html">小原晴太</a> is Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a><br>
+<a href="../index.html">s3-odaraのサイト</a> (C) 2023 by <a rel="auther" href="../about.html">小原晴太</a> is Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a><br />
 <div class="center"> <a href="../index.html">home</a> </div>
 </footer>
 </body>

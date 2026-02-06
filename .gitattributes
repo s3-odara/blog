@@ -1,0 +1,8 @@
+.gitignore export-ignore
+.gitlab-ci.yml export-ignore
+README.md export-ignore
+AGENTS.md export-ignore
+wrangler.toml export-ignore
+maketoc export-ignore
+src export-ignore
+scripts export-ignore

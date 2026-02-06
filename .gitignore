@@ -3,3 +3,5 @@
 *.swo
 
 *.md
+dist/
+brotli_file_list.txt

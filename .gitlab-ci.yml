@@ -1,50 +1,14 @@
 deploy:
   stage: deploy
-  image: alpine:latest
+  image: node:current-alpine
+  environment:
+    name: cloudflare-workers
   script:
-    - |
-      set -euo pipefail
-      apk update
-      apk upgrade
-      apk add aws-cli brotli rsync findutils
-      echo "Running deploy"
-
-      export AWS_EC2_METADATA_DISABLED="true"
-      aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
-      aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
-      aws configure set region "$AWS_DEFAULT_REGION"
-
-      # workers側のロジックも変えること!
-      BROTLI_REGEX='.*\.(htm|html|txt|text|asc|js|mjs|css|json|xml|svg|map|webmanifest)$'
-
-      rm -rf build_site_plain build_site__br brotli_file_list.txt
-      mkdir -p build_site_plain build_site__br
-      rsync -a --delete \
-        --exclude '.git*' \
-        --exclude 'build_site_plain' \
-        --exclude 'build_site__br' \
-        --exclude 'brotli_file_list.txt' \
-        ./ build_site_plain/
-
-      find build_site_plain -type f -regextype posix-extended -iregex "${BROTLI_REGEX}" -printf '%P\n' \
-        | LC_ALL=C sort > brotli_file_list.txt
-
-      while IFS= read -r rel; do
-        [ -z "$rel" ] && continue
-        src="build_site_plain/$rel"
-        dst="build_site__br/$rel"
-        mkdir -p "$(dirname "$dst")"
-        brotli -f -q 11 -o "$dst" "$src"
-      done < brotli_file_list.txt
-
-      aws s3 sync build_site_plain s3://wwws3-odaranet \
-        --endpoint-url https://6ecd930c8cd4dc63f87c9398762626e8.r2.cloudflarestorage.com \
-        --delete
-      aws s3 sync build_site__br s3://wwws3-odaranet/__br \
-        --endpoint-url https://6ecd930c8cd4dc63f87c9398762626e8.r2.cloudflarestorage.com \
-        --content-encoding br \
-        --delete
-      echo "Deployment successful"
+    - set -euo pipefail
+    - apk add --no-cache git curl jq
+    - npm i wrangler
+    - npm audit signatures
+    - sh scripts/ci/deploy.sh
   only:
     - master
 
@@ -54,13 +18,13 @@ pages:
   script:
     - apk update
     - apk upgrade
-    - apk add brotli
+    - apk add brotli file
     - mkdir .public
     - cp -r * .public
     - cp -r .well-known .public
     - mv .public public
-    - find public -type f -regex '.*\.\(htm\|html\|txt\|text\|js\|css\)$' -exec gzip -f -k {} \;
-    - find public -type f -regex '.*\.\(htm\|html\|txt\|text\|js\|css\)$' -exec brotli -f -k {} \;
+    - sh scripts/ci/compress_by_mime.sh public
+
   artifacts:
     paths:
       - public
