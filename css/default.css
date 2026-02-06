@@ -64,8 +64,6 @@ header > nav {
   flex-wrap: wrap;
   width: 100%;
   gap: 1em;
-  --nav-gap: clamp(0.8rem, 6vw, 2.5rem);
-  gap: var(--nav-gap);
   align-items: center;
   justify-content: center;
 }
