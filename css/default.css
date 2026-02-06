@@ -91,7 +91,7 @@ header > time {
   font-size: 0.9rem;
 }
 
-article {
+article, main.blog {
   width: 100%;
   max-width: 40rem;
   justify-self: center;
