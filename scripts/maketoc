@@ -1,0 +1,3 @@
+#!/bin/sh
+set -euo pipefail
+hxtoc -tx -l 2 -h 3 input.html > output.html
