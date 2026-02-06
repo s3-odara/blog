@@ -63,6 +63,7 @@ header > nav {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
+  gap: 1em;
   --nav-gap: clamp(0.8rem, 6vw, 2.5rem);
   gap: var(--nav-gap);
   align-items: center;
@@ -93,12 +94,14 @@ header > time {
 
 article, main.blog {
   width: 100%;
+  max-width: 40em;
   max-width: 40rem;
   justify-self: center;
   margin-left: 0;
   margin-right: 0;
   box-sizing: border-box;
   min-width: 0;
+  padding: 0 1em;
 }
 
 article > dl > dd:has(+ dt) {
@@ -238,7 +241,6 @@ ul:has(a) {
       right: 0rem;
       padding-left: 1.5rem;
       width: clamp(12rem, 16vw, 18rem);
-      max-height: calc(100dvh - (var(--gutter) * 2));
       overflow: auto;
     }
 
@@ -255,8 +257,10 @@ ul:has(a) {
 
 @media (max-width: 25rem) {
   body {
-    padding-left: 0.5em;
-    padding-right: 0.5em;
+    padding-left: 0.8em;
+    padding-left: 0.8rem;
+    padding-right: 0.8em;
+    padding-right: 0.8rem;
   }
 }
 
@@ -285,7 +289,7 @@ ul:has(a) {
   pre,
   pre code {
     white-space: pre-wrap;
-    word-break: break-word;
+    word-break: break-all;
     overflow-wrap: anywhere;
     break-inside: avoid;
   }
@@ -298,6 +302,13 @@ ul:has(a) {
   code {
     border-style: solid;
     border-width: 0.2em;
+  }
+}
+
+/* サポート */
+@supports (display: grid) {
+  article, main.blog {
+    padding: 0;
   }
 }
 
