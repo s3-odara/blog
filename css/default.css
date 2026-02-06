@@ -204,7 +204,7 @@ ul:has(a) {
   place-items: center;
 }
 
-.banner > a > img {
+.banner > a {
   width: min(100%, var(--banner-width));
   height: auto;
 }
