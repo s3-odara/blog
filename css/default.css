@@ -92,7 +92,8 @@ header > time {
 }
 
 article {
-  width: min(100%, 40rem);
+  width: 100%;
+  max-width: 40rem;
   justify-self: center;
   margin-left: 0;
   margin-right: 0;
