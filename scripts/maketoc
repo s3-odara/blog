@@ -1,4 +1,31 @@
-<<<<<<< HEAD
 #!/bin/sh
 set -euo pipefail
-hxtoc -tx -l 2 -h 3 input.html > output.html
+
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $0 path/to/file.html | -" >&2
+  exit 2
+fi
+
+in=$1
+
+# stdin → stdout
+if [ "$in" = "-" ]; then
+  hxtoc -tx -l 2 -h 3
+  exit 0
+fi
+
+if [ ! -f "$in" ]; then
+  echo "Error: not found: $in" >&2
+  exit 1
+fi
+
+tmpdir=$(mktemp -d)
+trap 'rm -rf "$tmpdir"' EXIT
+
+tmp="$tmpdir/out.html"
+hxtoc -tx -l 2 -h 3 "$in" > "$tmp"
+
+# 同一FS上で原子的に差し替え
+mv -f "$tmp" "$in"
+echo "Updated TOC (h2-h3) in: $in" >&2
+
