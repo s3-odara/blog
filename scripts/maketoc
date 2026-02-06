@@ -23,7 +23,7 @@ tmpdir=$(mktemp -d)
 trap 'rm -rf "$tmpdir"' EXIT
 
 tmp="$tmpdir/out.html"
-hxtoc -tx -l 2 -h 3 "$in" > "$tmp"
+hxtoc -txf -l 2 -h 3 "$in" > "$tmp"
 
 # 同一FS上で原子的に差し替え
 mv -f "$tmp" "$in"
