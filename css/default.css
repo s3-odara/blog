@@ -189,6 +189,10 @@ hr {
 ul li {
   margin-top: 0.2rem;
 }
+@media (max-width: 35rem) {
+  ul li{
+  margin-top: 0.4rem;
+}
 
 .center {
   text-align: center;
