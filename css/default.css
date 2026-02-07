@@ -63,6 +63,7 @@ header > nav {
   display: flex;
   flex-wrap: wrap;
   width: 23em;
+  max-width: 100%;
   gap: 1em;
   align-items: center;
   justify-content: left;
