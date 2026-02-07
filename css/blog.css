@@ -59,13 +59,13 @@ header > nav {
   font-family: serif;
   box-sizing: border-box;
   border-bottom: 3px solid #555;
-  padding-bottom: 0.8rem;
+  padding-bottom: 1.8rem;
   display: flex;
   flex-wrap: wrap;
-  width: 23em;
+  width: 100%;
   gap: 1em;
   align-items: center;
-  justify-content: left;
+  justify-content: center;
 }
 
 header > nav a {
@@ -229,13 +229,14 @@ ul:has(a) {
 
     nav#toc {
       position: fixed;
-      top: 1em;
+      top: 0;
       right: 0em;
       right: 0.5rem;
       padding-left: 1.5rem;
       width: 12rem;
       width: clamp(12rem, 16vw, 18rem);
       overflow: auto;
+      margin-top: 2.2rem;
     }
 
     header > nav:has(a[href="../index.html"]) a + a::before {
@@ -245,6 +246,96 @@ ul:has(a) {
       transform: translateX(20%);
       border-left: 0;
       border-top: 2px dotted currentColor;
+    }
+  }
+}
+@media (min-width: 95rem) {
+  @supports (width: clamp(12rem, 16vw, 18rem)) {
+    body {
+      grid-auto-columns: initial;
+      grid-template-columns: 0rem minmax(0, 1fr);
+      grid-template-rows: 1fr auto;
+      column-gap: 0;
+      justify-content: center;
+      align-items: start;
+      margin-top: 1rem;
+    }
+
+    body > header {
+      display: contents;
+    }
+
+    header > nav.blog {
+      grid-column: 1;
+      grid-row: 1;
+      position: static;
+      align-self: start;
+      width: 10rem;
+      margin: 0;
+      overflow: auto;
+      max-height: calc(100dvh - 2em);
+      justify-content: flex-start;
+      flex-wrap: nowrap;
+      flex-direction: column;
+      gap: 1.8rem;
+      align-items: flex-start;
+      margin-top: 1.5rem;
+    }
+
+    main.blog {
+      grid-column: 2;
+      grid-row: 1;
+      justify-self: stretch;
+      width: 100%;
+      min-width: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 40rem);
+      justify-content: center;
+      column-gap: 3rem;
+      align-items: start;
+      max-width: none;
+      padding: 0;
+    }
+
+    main.blog:has(nav#toc) {
+      grid-template-columns: minmax(0, 40rem) clamp(12rem, 16vw, 18rem);
+    }
+
+    main.blog > article {
+      display: contents;
+    }
+
+    main.blog > article > header {
+      display: contents;
+    }
+
+    main.blog > article > :not(header) {
+      grid-column: 1;
+      min-width: 0;
+    }
+
+    main.blog > article > header > :not(nav#toc) {
+      grid-column: 1;
+      min-width: 0;
+    }
+
+    main.blog nav#toc {
+      grid-column: 2;
+      position: sticky;
+      top: 1em;
+      right: auto;
+      left: auto;
+      width: auto;
+      margin: 0;
+      padding-left: 1.5rem;
+      overflow: auto;
+      max-height: calc(100dvh - 2em);
+      min-width: 0;
+    }
+
+    body > footer {
+      grid-column: 1 / -1;
+      grid-row: 2;
     }
   }
 }
@@ -312,14 +403,6 @@ ul:has(a) {
   gap: var(--nav-gap);
 }
 
-header > nav a + a::before {
-  content: "";
-  position: absolute;
-  top: 5%;
-  bottom: 5%;
-  left: calc(var(--nav-gap) / -2);
-  border-left: 1.5px dotted currentColor;
-}
 
 }
 
