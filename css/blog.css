@@ -192,6 +192,7 @@ ul:has(a) {
 
 .center {
   text-align: center;
+  margin-top: 1em;
 }
 
 .banner {
