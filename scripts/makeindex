@@ -1,0 +1,188 @@
+#!/bin/sh
+set -eu
+
+usage() {
+  cat >&2 <<'USAGE'
+Usage:
+  makeindex [-i INDEX] [--date-source datetime|text] path/to/article.html [more articles...]
+
+Options:
+  -i INDEX
+      index.html のパス（省略時: ./index.html）
+
+  --date-source datetime|text
+      datetime: <time datetime="..."> の属性値を使う（省略時）
+      text    : <time>...</time> の中身の文字列を使う
+
+Notes:
+  - index.html の対象UL配下の各 <li> は「1行」にある前提です。
+USAGE
+  exit 2
+}
+
+die() { printf '%s\n' "$*" >&2; exit 1; }
+
+INDEX="./index.html"
+DATE_SOURCE="datetime"
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -i) [ $# -ge 2 ] || die "-i needs an argument"; INDEX="$2"; shift 2 ;;
+    --date-source) [ $# -ge 2 ] || die "--date-source needs an argument"; DATE_SOURCE="$2"; shift 2 ;;
+    -h|--help) usage ;;
+    --) shift; break ;;
+    -*) die "unknown option: $1" ;;
+    *) break ;;
+  esac
+done
+
+[ $# -ge 1 ] || usage
+[ -f "$INDEX" ] || die "index not found: $INDEX"
+
+command -v xmllint >/dev/null 2>&1 || die "xmllint not found"
+command -v awk >/dev/null 2>&1 || die "awk not found"
+command -v sort >/dev/null 2>&1 || die "sort not found"
+command -v mktemp >/dev/null 2>&1 || die "mktemp not found"
+
+case "$DATE_SOURCE" in
+  datetime|text) : ;;
+  *) die "--date-source must be datetime or text" ;;
+esac
+
+escape_html() {
+  printf '%s' "$1" \
+    | sed -e 's/&/\&amp;/g' \
+          -e 's/</\&lt;/g' \
+          -e 's/>/\&gt;/g' \
+          -e 's/"/\&quot;/g'
+}
+
+xpath_string() {
+  file=$1
+  expr=$2
+  xmllint --html --xpath "$expr" "$file" 2>/dev/null || true
+}
+
+extract_title() {
+  f=$1
+
+  # まず h1 を優先して取る（main/article 内 → どこでも）
+  expr_h1='normalize-space(string((//main//h1|//article//h1|//h1)[1]))'
+  t=$(xpath_string "$f" "$expr_h1")
+
+  # h1 が取れなかった場合だけ title
+  if [ -z "$t" ]; then
+    expr_title='normalize-space(string(//title[1]))'
+    t=$(xpath_string "$f" "$expr_title")
+  fi
+
+  [ -n "$t" ] || die "title not found in: $f"
+  escape_html "$t"
+}
+
+extract_date() {
+  f=$1
+  case "$DATE_SOURCE" in
+    datetime) expr='normalize-space(string(//time[1]/@datetime))' ;;
+    text)     expr='normalize-space(string(//time[1]))' ;;
+  esac
+  d=$(xpath_string "$f" "$expr")
+  [ -n "$d" ] || die "time/date not found in: $f"
+  printf '%s' "$d"
+}
+
+make_href() {
+  f=$1
+  case "$f" in
+    /*)
+      if command -v realpath >/dev/null 2>&1 && realpath --relative-to=. . >/dev/null 2>&1; then
+        idxdir=$(cd "$(dirname "$INDEX")" && pwd)
+        (cd "$idxdir" && realpath --relative-to=. "$f") || die "failed to relativize: $f"
+      else
+        die "absolute path given but cannot relativize; pass a relative path instead: $f"
+      fi
+      ;;
+    *)
+      printf '%s' "$f"
+      ;;
+  esac
+}
+
+tmp_lines=$(mktemp)
+tmp_keyed=$(mktemp)
+tmp_sorted=$(mktemp)
+idxdir=$(dirname "$INDEX")
+tmp_out=$(mktemp "${idxdir}/.index.html.tmp.XXXXXX")
+
+cleanup() { rm -f "$tmp_lines" "$tmp_keyed" "$tmp_sorted" "$tmp_out"; }
+trap cleanup EXIT
+
+# 既存 <li> 抽出（変数名 in は使わない）
+awk '
+  BEGIN { inside_list=0 }
+  /<ul[^>]*id="全てのブログ記事のリスト"[^>]*>/ { inside_list=1; next }
+  inside_list && /<\/ul>/ { inside_list=0; next }
+  inside_list && /^[[:space:]]*<li>/ { print }
+' "$INDEX" > "$tmp_lines"
+
+for article in "$@"; do
+  [ -f "$article" ] || die "article not found: $article"
+  date=$(extract_date "$article")
+  title=$(extract_title "$article")
+  href=$(make_href "$article")
+  printf '<li>%s: <a href="%s">%s</a></li>\n' "$date" "$href" "$title" >> "$tmp_lines"
+done
+
+# ソート用キー付与（POSIX寄り）
+awk '
+  {
+    line=$0
+    # <li> を除去して先頭を作る
+    sub(/^[[:space:]]*<li>/, "", line)
+    # ": <a " の直前までをキーにする
+    key=line
+    split(line, parts, /: <a[[:space:]]/)
+    if (parts[1] != "") key=parts[1]
+    print key "\t" $0
+  }
+' "$tmp_lines" > "$tmp_keyed"
+
+# 日付キー降順ソート → href で重複排除
+sort -r -k1,1 "$tmp_keyed" \
+| awk -F '\t' '
+  {
+    li=$2
+    href=li
+    if (match(li, /href="[^"]+"/)) {
+      # "href="" の 6 文字 + 末尾の " 1 文字を除く
+      href=substr(li, RSTART+6, RLENGTH-7)
+    }
+    if (!seen[href]++) print li
+  }
+' > "$tmp_sorted"
+
+# UL 中身だけ差し替え（変数名 in は使わない）
+awk -v listfile="$tmp_sorted" '
+  BEGIN {
+    n=0
+    while ((getline l < listfile) > 0) list[++n]=l
+    close(listfile)
+    inside_list=0
+  }
+  {
+    if (!inside_list && $0 ~ /<ul[^>]*id="全てのブログ記事のリスト"[^>]*>/) {
+      inside_list=1
+      print
+      for (i=1; i<=n; i++) print list[i]
+      next
+    }
+    if (inside_list) {
+      if ($0 ~ /<\/ul>/) { inside_list=0; print }
+      next
+    }
+    print
+  }
+' "$INDEX" > "$tmp_out"
+
+mv -f "$tmp_out" "$INDEX"
+printf 'Updated: %s\n' "$INDEX" >&2

@@ -1,5 +1,5 @@
 #!/bin/sh
-set -euo pipefail
+set -eu
 
 if [ "$#" -ne 1 ]; then
   echo "Usage: $0 path/to/file.html | -" >&2
@@ -8,9 +8,8 @@ fi
 
 in=$1
 
-# stdin → stdout
 if [ "$in" = "-" ]; then
-  hxtoc -tx -l 2 -h 3
+  hxtoc -txf -l 2 -h 3
   exit 0
 fi
 
@@ -19,13 +18,14 @@ if [ ! -f "$in" ]; then
   exit 1
 fi
 
-tmpdir=$(mktemp -d)
-trap 'rm -rf "$tmpdir"' EXIT
+dir=$(dirname -- "$in")
+base=$(basename -- "$in")
 
-tmp="$tmpdir/out.html"
+tmp=$(mktemp "${dir}/.${base}.tmp.XXXXXX")
+trap 'rm -f "$tmp"' EXIT
+
 hxtoc -txf -l 2 -h 3 "$in" > "$tmp"
 
-# 同一FS上で原子的に差し替え
-mv -f "$tmp" "$in"
+mv -f -- "$tmp" "$in"
 echo "Updated TOC (h2-h3) in: $in" >&2
 

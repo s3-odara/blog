@@ -72,6 +72,13 @@ header > nav a {
   position: relative;
 }
 
+footer > nav {
+  text-align: center;
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+
+
 header > h1 {
   margin-block: 0.67rem;
   font-size: 2rem;
@@ -238,15 +245,6 @@ ul:has(a) {
       width: clamp(12rem, 16vw, 18rem);
       overflow: auto;
       margin-top: 2.2rem;
-    }
-
-    header > nav:has(a[href="../index.html"]) a + a::before {
-      top: calc(var(--nav-gap) / -2);
-      bottom: auto;
-      width: 7rem;
-      transform: translateX(20%);
-      border-left: 0;
-      border-top: 2px dotted currentColor;
     }
   }
 }

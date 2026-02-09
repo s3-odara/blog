@@ -1,0 +1,283 @@
+#!/bin/sh
+# makeref: fill/update anchor text between <!--begin-ref--> and <!--end-ref-->
+
+set -eu
+
+usage() { echo "Usage: makeref path/to/file" >&2; exit 2; }
+
+[ $# -eq 1 ] || usage
+file=$1
+[ -f "$file" ] || { echo "makeref: not a file: $file" >&2; exit 2; }
+
+need_cmd() {
+  command -v "$1" >/dev/null 2>&1 || {
+    echo "makeref: missing command: $1" >&2
+    exit 2
+  }
+}
+
+need_cmd xmllint
+need_cmd perl
+need_cmd iconv
+need_cmd head
+need_cmd sed
+need_cmd tr
+need_cmd grep
+need_cmd awk
+need_cmd mktemp
+need_cmd cksum
+
+if command -v curl >/dev/null 2>&1; then
+  FETCHER=curl
+elif command -v wget >/dev/null 2>&1; then
+  FETCHER=wget
+else
+  echo "makeref: need curl or wget" >&2
+  exit 2
+fi
+
+TIMEOUT="${MAKEREF_TIMEOUT:-20}"            # seconds
+MAX_BYTES="${MAKEREF_MAX_BYTES:-1048576}"   # 1 MiB (post-fetch parse limit)
+UA="${MAKEREF_UA:-makeref/0.3}"
+ACCEPT_LANG="${MAKEREF_LANG:-ja,en;q=0.8}"
+
+run_cache="$(mktemp -d "${TMPDIR:-/tmp}/makeref.XXXXXX")" || exit 1
+cleanup() { rm -rf "$run_cache" 2>/dev/null || true; }
+trap cleanup EXIT INT TERM HUP
+
+hash_url() {
+  if command -v sha256sum >/dev/null 2>&1; then
+    printf '%s' "$1" | sha256sum | awk '{print $1}'
+  elif command -v sha256 >/dev/null 2>&1; then
+    printf '%s' "$1" | sha256 | awk '{print $1}'
+  elif command -v openssl >/dev/null 2>&1; then
+    printf '%s' "$1" | openssl dgst -sha256 | awk '{print $NF}'
+  else
+    # last resort (we already need_cmd cksum + awk)
+    printf '%s' "$1" | cksum | awk '{print $1}'
+  fi
+}
+
+fetch_to_file() {
+  url=$1
+  out=$2
+  if [ "$FETCHER" = "curl" ]; then
+    curl -LfsS --max-time "$TIMEOUT" -A "$UA" \
+      -H "Accept-Language: $ACCEPT_LANG" \
+      -o "$out" -- "$url" 2>/dev/null || return 1
+  else
+    wget -q --timeout="$TIMEOUT" --tries=2 \
+      --header="Accept-Language: $ACCEPT_LANG" \
+      --user-agent="$UA" \
+      -O "$out" -- "$url" 2>/dev/null || return 1
+  fi
+
+  # Enforce MAX_BYTES for parsing (does NOT necessarily reduce download bytes)
+  tmp="${out}.trim"
+  head -c "$MAX_BYTES" "$out" >"$tmp" 2>/dev/null && mv -f "$tmp" "$out"
+  return 0
+}
+
+sniff_charset() {
+  head -c 8192 "$1" | perl -0777 -ne '
+    if (m{<meta[^>]*charset\s*=\s*["\x27]?\s*([A-Za-z0-9._-]+)}i) { print lc($1); exit }
+    if (m{<meta[^>]*http-equiv\s*=\s*["\x27]?\s*content-type\s*["\x27]?[^>]*content\s*=\s*["\x27][^"\x27]*charset\s*=\s*([A-Za-z0-9._-]+)}i) { print lc($1); exit }
+  ' 2>/dev/null
+}
+
+canon_charset() {
+  cs=$(printf '%s' "$1" | tr 'A-Z' 'a-z' | tr -d ' ')
+  case "$cs" in
+    utf8|utf-8) echo "utf-8" ;;
+    cp1252|windows-1252|x-windows-1252) echo "windows-1252" ;;
+    iso-8859-1|latin1) echo "ISO-8859-1" ;;
+    shift_jis|shift-jis|shiftjis|sjis) echo "SHIFT_JIS" ;;
+    cp932|windows-31j) echo "CP932" ;;
+    euc-jp|eucjp) echo "EUC-JP" ;;
+    *) echo "$1" ;;
+  esac
+}
+
+force_utf8_meta() {
+  in=$1
+  out=$2
+  perl -0777 -pe '
+    my $meta_http = qq{<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">};
+    my $meta_h5   = qq{<meta charset="UTF-8">};
+
+    # If http-equiv Content-Type exists, rewrite charset to UTF-8
+    if (/<meta\b[^>]*http-equiv\s*=\s*["\x27]?\s*content-type\b/i) {
+      s{
+        (<meta\b[^>]*http-equiv\s*=\s*["\x27]?\s*content-type\b[^>]*content\s*=\s*["\x27][^"\x27]*charset\s*=\s*)
+        ([A-Za-z0-9._-]+)
+      }{$1UTF-8}igx;
+    } else {
+      # Otherwise, inject both at the beginning of <head>
+      if (!s{(<head\b[^>]*>)}{$1$meta_http$meta_h5}i) {
+        $_ = $meta_http . $meta_h5 . $_;
+      }
+    }
+  ' "$in" >"$out" 2>/dev/null || cp -f "$in" "$out"
+}
+
+xpath_str_file() {
+  expr=$1
+  in=$2
+  xmllint --nonet --html --recover --nowarning --xpath "$expr" "$in" 2>/dev/null || true
+}
+
+squeeze_ws() { tr '\r\n' '  ' | sed 's/[[:space:]]\+/ /g; s/^ //; s/ $//' ; }
+html_escape() { sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g' ; }
+
+remote_text() {
+  url=$1
+  key="$(hash_url "$url")"
+  cache="$run_cache/$key.txt"
+  raw="$run_cache/$key.raw"
+  utf="$run_cache/$key.utf8.html"
+  forced="$run_cache/$key.forced.html"
+
+  if [ -f "$cache" ]; then
+    cat "$cache"
+    return 0
+  fi
+
+  fetch_to_file "$url" "$raw" || return 1
+  [ -s "$raw" ] || return 1
+
+  cs="$(sniff_charset "$raw")"
+  if [ -n "$cs" ]; then
+    cs="$(canon_charset "$cs")"
+    if [ "$cs" = "utf-8" ] || [ "$cs" = "UTF-8" ]; then
+      cp -f "$raw" "$utf"
+    else
+      iconv -f "$cs" -t UTF-8//TRANSLIT "$raw" >"$utf" 2>/dev/null || return 1
+    fi
+  else
+    # No declaration: treat as UTF-8 if it validates, else assume windows-1252
+    if iconv -f UTF-8 -t UTF-8 "$raw" >/dev/null 2>&1; then
+      cp -f "$raw" "$utf"
+    else
+      iconv -f windows-1252 -t UTF-8//TRANSLIT "$raw" >"$utf" 2>/dev/null || return 1
+    fi
+  fi
+
+  # Normalize if available, then force UTF-8 meta once.
+  if command -v hxnormalize >/dev/null 2>&1; then
+    norm="$run_cache/$key.norm.html"
+    if hxnormalize -x "$utf" >"$norm" 2>/dev/null; then
+      force_utf8_meta "$norm" "$forced"
+    else
+      force_utf8_meta "$utf" "$forced"
+    fi
+  else
+    force_utf8_meta "$utf" "$forced"
+  fi
+
+  # Prefer title then h1
+  title="$(xpath_str_file 'normalize-space(//title[1])' "$forced" | squeeze_ws)"
+  if [ -n "$title" ]; then
+    printf '%s' "$title" >"$cache"
+    cat "$cache"
+    return 0
+  fi
+
+  h1="$(xpath_str_file 'normalize-space((//h1)[1])' "$forced" | squeeze_ws)"
+  if [ -n "$h1" ]; then
+    printf '%s' "$h1" >"$cache"
+    cat "$cache"
+    return 0
+  fi
+
+  return 1
+}
+
+extract_urls_from_line() {
+  perl -ne 'while(/href\s*=\s*([\"\x27])([^\"\x27]+)\1/gi){print "$2\n"}' 2>/dev/null
+}
+
+get_anchor_text_for_url() {
+  MR_URL="$1" perl -ne '
+    my $u=$ENV{MR_URL};
+    if (m{<a\b[^>]*\bhref\s*=\s*([\"\x27])\Q$u\E\1[^>]*>(.*?)</a>}is) {
+      my $t=$2;
+      $t =~ s/^\s+|\s+$//g;
+      print $t;
+      exit;
+    }
+  ' 2>/dev/null
+}
+
+replace_anchor_text_for_url() {
+  MR_URL="$1" MR_TITLE="$2" perl -pe '
+    my $u=$ENV{MR_URL};
+    my $t=$ENV{MR_TITLE};
+    s{(<a\b[^>]*\bhref\s*=\s*([\"\x27])\Q$u\E\2[^>]*>).*?(</a>)}{$1$t$3}gis;
+  ' 2>/dev/null
+}
+
+has_begin_marker() { printf '%s' "$1" | grep -q 'begin-ref'; }
+has_end_marker()   { printf '%s' "$1" | grep -q 'end-ref'; }
+
+dir=$(dirname -- "$file")
+base=$(basename -- "$file")
+tmp="$(mktemp "$dir/.${base}.makeref.XXXXXX")" || exit 1
+
+if command -v chmod >/dev/null 2>&1; then
+  chmod --reference="$file" "$tmp" 2>/dev/null || true
+fi
+
+in_ref=0
+saw_ref=0
+
+# NOTE: This is line-based. <a ...> ... </a> must appear on one line to be updated.
+while IFS= read -r line || [ -n "$line" ]; do
+  if has_begin_marker "$line"; then
+    in_ref=1; saw_ref=1
+    printf '%s\n' "$line" >>"$tmp"
+    continue
+  fi
+  if has_end_marker "$line"; then
+    in_ref=0
+    printf '%s\n' "$line" >>"$tmp"
+    continue
+  fi
+
+  if [ "$in_ref" -eq 1 ] && printf '%s' "$line" | grep -qi '<a[[:space:]>]'; then
+    new_line=$line
+    urls="$(printf '%s\n' "$line" | extract_urls_from_line)"
+    if [ -n "$urls" ]; then
+      while IFS= read -r url; do
+        [ -n "$url" ] || continue
+
+        if text="$(remote_text "$url")"; then
+          esc="$(printf '%s' "$text" | html_escape)"
+          new_line="$(printf '%s\n' "$new_line" | replace_anchor_text_for_url "$url" "$esc")"
+        else
+          cur="$(printf '%s\n' "$new_line" | get_anchor_text_for_url "$url")"
+          if [ -z "$cur" ]; then
+            esc="$(printf '%s' "$url" | html_escape)"
+            new_line="$(printf '%s\n' "$new_line" | replace_anchor_text_for_url "$url" "$esc")"
+          fi
+          echo "makeref: warn: failed to fetch/parse: $url" >&2
+        fi
+      done <<EOF
+$urls
+EOF
+      printf '%s\n' "$new_line" >>"$tmp"
+      continue
+    fi
+  fi
+
+  printf '%s\n' "$line" >>"$tmp"
+done <"$file"
+
+if [ "$saw_ref" -eq 0 ]; then
+  rm -f "$tmp"
+  echo "makeref: no <!--begin-ref--> block found in $file" >&2
+  exit 2
+fi
+
+mv -f "$tmp" "$file"
+exit 0
+

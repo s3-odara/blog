@@ -67,10 +67,17 @@ header > nav {
   gap: 1em;
   align-items: center;
   justify-content: left;
+  margin-top: 1em;
 }
 
 header > nav a {
   position: relative;
+}
+
+footer > nav {
+  text-align: center;
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
 }
 
 header > h1 {
@@ -189,6 +196,7 @@ hr {
 ul li {
   margin-top: 0.2rem;
 }
+
 @media (max-width: 35rem) {
   ul li{
   margin-top: 0.4rem;
@@ -210,6 +218,7 @@ ul li {
 .banner > a {
   width: min(100%, var(--banner-width));
   height: auto;
+}
 }
 
 /* メディアクエリ */
