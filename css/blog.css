@@ -31,13 +31,6 @@ body > header {
   margin-bottom: 0.8em;
 }
 
-body > main {
-  width: 100%;
-  flex: 1 0 auto;
-  box-sizing: border-box;
-  min-width: 0;
-}
-
 h1,
 h2,
 h3,
@@ -230,27 +223,27 @@ ul:has(a) {
   }
 
   @supports (display: grid) {
-    article {
+    article:has(nav#toc) {
       display: grid;
-      grid-template-columns: minmax(0, 40rem) 13em;
       grid-template-columns: minmax(0, 40rem) clamp(12rem, 16vw, 18rem);
       justify-content: center;
       column-gap: 3rem;
       align-items: start;
       max-width: none;
+      margin-left: 2rem;
     }
 
-    article > header {
+    article:has(nav#toc) > header {
       display: contents;
     }
 
-    article > :not(header),
-    article > header > :not(nav#toc) {
+    article:has(nav#toc) > :not(header),
+    article:has(nav#toc) > header > :not(nav#toc) {
       grid-column: 1;
       min-width: 0;
     }
 
-    article nav#toc {
+    article:has(nav#toc) nav#toc {
       grid-column: 2;
       grid-row: 1 / span 999;
       align-self: start;
