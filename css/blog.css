@@ -127,6 +127,10 @@ article p + p {
   margin-block-start: 0.75rlh;
 }
 
+li + li {
+    margin-block-end: 0.2rem;
+}
+
 nav#toc {
   margin-top: 1.5rem;
   margin-bottom: 2rem;
