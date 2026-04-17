@@ -22,14 +22,20 @@ body {
   font-size: 1rem;
   padding-left: 1rem;
   padding-right: 1rem;
-  display: grid;
-  grid-auto-columns: 100%;
-  grid-template-rows: auto 1fr auto;
+  display: flex;
+  flex-direction: column;
   margin: 0;
 }
 
 body > header {
   margin-bottom: 0.8em;
+}
+
+body > main {
+  width: 100%;
+  flex: 1 0 auto;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 h1,
@@ -88,20 +94,18 @@ header > time {
   font-size: 0.9rem;
 }
 
-article, main.blog {
+article {
   width: 100%;
   max-width: 40em;
   max-width: 40rem;
-  justify-self: center;
-  margin-left: 0;
-  margin-right: 0;
+  margin-inline: auto;
   box-sizing: border-box;
   min-width: 0;
   padding: 0 1em;
 }
 
 @supports (display: grid) {
-  article, main.blog {
+  article {
     padding: 0;
   }
 }
@@ -221,123 +225,44 @@ ul:has(a) {
 
 /* メディアクエリ */
 @media (min-width: 95rem) {
-  @supports (display: flex) {
-    header > nav.blog {
-      position: fixed;
-      top: 1em;
-      padding-right: 1.5rem;
-      width: 9em;
-      width: 10rem;
-      overflow: auto;
-      justify-content: left;
-      margin-block: 1.5rem 2rem;
-    }
-
-    article:has(#toc) {
-      margin-right: 3em;
-      margin-right: 3rem;
-    }
-
-    nav#toc {
-      position: fixed;
-      top: 0;
-      right: 0em;
-      right: 0.5rem;
-      padding-left: 1.5rem;
-      width: 12rem;
-      width: clamp(12rem, 16vw, 18rem);
-      overflow: auto;
-      margin-top: 2.2rem;
-    }
+  body {
+    margin-top: 1rem;
   }
-}
-@media (min-width: 95rem) {
-  @supports (width: clamp(12rem, 16vw, 18rem)) {
-    body {
-      grid-auto-columns: initial;
-      grid-template-columns: 0rem minmax(0, 1fr);
-      grid-template-rows: 1fr auto;
-      column-gap: 0;
-      justify-content: center;
-      align-items: start;
-      margin-top: 1rem;
-    }
 
-    body > header {
-      display: contents;
-    }
-
-    header > nav.blog {
-      grid-column: 1;
-      grid-row: 1;
-      position: static;
-      align-self: start;
-      width: 10rem;
-      margin: 0;
-      overflow: auto;
-      max-height: calc(100dvh - 2em);
-      justify-content: flex-start;
-      flex-wrap: nowrap;
-      flex-direction: column;
-      gap: 1.8rem;
-      align-items: flex-start;
-      margin-top: 1.5rem;
-    }
-
-    main.blog {
-      grid-column: 2;
-      grid-row: 1;
-      justify-self: stretch;
-      width: 100%;
-      min-width: 0;
+  @supports (display: grid) {
+    article {
       display: grid;
-      grid-template-columns: minmax(0, 40rem);
+      grid-template-columns: minmax(0, 40rem) 13em;
+      grid-template-columns: minmax(0, 40rem) clamp(12rem, 16vw, 18rem);
       justify-content: center;
       column-gap: 3rem;
       align-items: start;
       max-width: none;
-      padding: 0;
     }
 
-    main.blog:has(nav#toc) {
-      grid-template-columns: minmax(0, 40rem) clamp(12rem, 16vw, 18rem);
-    }
-
-    main.blog > article {
+    article > header {
       display: contents;
     }
 
-    main.blog > article > header {
-      display: contents;
-    }
-
-    main.blog > article > :not(header) {
+    article > :not(header),
+    article > header > :not(nav#toc) {
       grid-column: 1;
       min-width: 0;
     }
 
-    main.blog > article > header > :not(nav#toc) {
-      grid-column: 1;
-      min-width: 0;
-    }
-
-    main.blog nav#toc {
+    article nav#toc {
       grid-column: 2;
+      grid-row: 1 / span 999;
+      align-self: start;
       position: sticky;
       top: 1em;
-      right: auto;
-      left: auto;
-      width: auto;
-      margin: 0;
       padding-left: 1.5rem;
+      width: auto;
       overflow: auto;
+      margin: 0;
       max-height: calc(100dvh - 2em);
       min-width: 0;
-    }
-
-    body > footer {
-      grid-column: 1 / -1;
-      grid-row: 2;
+      margin-top: 1em;
     }
   }
 }

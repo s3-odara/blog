@@ -19,4 +19,4 @@ routes = ["example.com/*"]
 [env.prod.assets]
 binding = "ASSETS"
 directory = "./dist"
-html_handling = "no"
+html_handling = "none"
