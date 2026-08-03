@@ -5,15 +5,6 @@ compatibility_date = "2026-02-04"
 workers_dev = false
 
 [assets]
-directory = "./dist"
+directory = "."
 html_handling = "none"
 not_found_handling = "404-page"
-
-# custom domain name (require permission to cf api key)
-[env.prod]
-workers_dev = false
-routes = ["example.com/*"]
-
-[env.prod.assets]
-directory = "./dist"
-html_handling = "none"

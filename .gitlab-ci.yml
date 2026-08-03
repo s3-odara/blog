@@ -5,10 +5,9 @@ deploy:
     name: cloudflare-workers
   script:
     - set -euo pipefail
-    - apk add --no-cache git curl jq
     - npm i wrangler
     - npm audit signatures
-    - sh scripts/ci/deploy.sh
+    - ./node_modules/.bin/wrangler deploy
   only:
     - master
 
